@@ -1,0 +1,16 @@
+{
+  "name": "projetfinal-messagerie-choco-fred-sofiane",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nest": "nest"
+  },
+  "keywords": [],
+  "author": "@Fredray-21",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/cli": "^10.3.2"
+  }
+}
