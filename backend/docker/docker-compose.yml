@@ -9,6 +9,19 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes:
       - cache:/data
+
+  db:
+    image: postgres:latest
+    ports:
+      - "${DATABASE_PORT}:5432"
+    environment:
+      POSTGRES_DB: "${DATABASE_NAME}"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
 volumes:
+  postgres_data:
   cache:
     driver: local
