@@ -1,7 +1,6 @@
 import { BullModule } from '@nestjs/bullmq';
 import { MessageResolver } from './Message.resolver';
 import { Module } from '@nestjs/common';
-import { MessageController } from './Message.controller';
 import { MessageService } from './Message.service';
 
 @Module({
@@ -10,7 +9,7 @@ import { MessageService } from './Message.service';
       name: 'message-queue',
     }),
   ],
-  controllers: [MessageController],
+  controllers: [],
   providers: [MessageService, MessageResolver],
 })
 export class MessageModule {}

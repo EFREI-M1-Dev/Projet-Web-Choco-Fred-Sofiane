@@ -1,6 +1,5 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
-import { UserController } from './User.controller';
 import { UserService } from './User.service';
 import { UserResolver } from './User.resolver';
 
@@ -10,7 +9,7 @@ import { UserResolver } from './User.resolver';
             name: 'user-queue',
         }),
     ],
-    controllers: [UserController],
+    controllers: [],
     providers: [UserService, UserResolver],
 })
 export class UserModule {}

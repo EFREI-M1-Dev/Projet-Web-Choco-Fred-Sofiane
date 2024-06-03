@@ -1,5 +1,4 @@
 import {Field, ID, ObjectType} from '@nestjs/graphql';
-import {ApiProperty} from "@nestjs/swagger";
 
 @ObjectType({description: 'User'})
 export class User {

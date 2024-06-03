@@ -1,14 +1,14 @@
 import { Message } from './Message.model';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MessageService } from './Message.service';
-import { NotFoundException } from '@nestjs/common';
+import {NotFoundException, Param} from '@nestjs/common';
 
 @Resolver((of) => Message)
 export class MessageResolver {
   constructor(private readonly messageService: MessageService) {}
 
   @Query((returns) => Message)
-  async message(@Args('id') id: string): Promise<Message> {
+  async message(@Param('id') id: string): Promise<Message> {
     const message = await this.messageService.findOneById(id);
     if (!message) {
       throw new NotFoundException(id);
@@ -18,9 +18,9 @@ export class MessageResolver {
 
   @Mutation((returns) => Message)
   async addMessageJob(
-    @Args('conversationId') conversationId: number,
-    @Args('userId') userId: number,
-    @Args('content') content: string,
+    @Param('conversationId') conversationId: number,
+    @Param('userId') userId: number,
+    @Param('content') content: string,
   ): Promise<void> {
     await this.messageService.addMessageJob(conversationId, userId, content);
   }

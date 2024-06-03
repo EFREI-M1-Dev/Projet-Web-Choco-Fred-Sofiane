@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectQueue} from '@nestjs/bullmq';
 import {Queue} from 'bullmq';
 import consola from "consola";
-import {HealthCheck} from "./models/HealthCheck.model";
+import {HealthCheck} from "./HealthCheck.model";
 
 @Injectable()
 export class HealthCheckService {

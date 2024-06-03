@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import {HealthCheckService} from "./HealthCheck.service";
-import {HealthCheck} from "./models/HealthCheck.model";
+import {HealthCheck} from "./HealthCheck.model";
 
 @Resolver(of => HealthCheck)
 export class HealthCheckResolver {
