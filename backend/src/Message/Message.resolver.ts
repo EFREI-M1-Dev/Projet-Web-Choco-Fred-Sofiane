@@ -1,6 +1,6 @@
-import { Message } from './model';
+import { Message } from './Message.model';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { MessageService } from './service';
+import { MessageService } from './Message.service';
 import { NotFoundException } from '@nestjs/common';
 
 @Resolver((of) => Message)

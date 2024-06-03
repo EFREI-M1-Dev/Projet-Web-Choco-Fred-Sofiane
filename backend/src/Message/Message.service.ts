@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { Message } from './model';
+import { Message } from './Message.model';
 
 @Injectable()
 export class MessageService {

@@ -1,7 +1,7 @@
 import { Controller, Get, NotFoundException, Post } from '@nestjs/common';
-import { MessageService } from './service';
+import { MessageService } from './Message.service';
 import { Args } from '@nestjs/graphql';
-import { Message } from './model';
+import { Message } from './Message.model';
 
 @Controller()
 export class MessageController {

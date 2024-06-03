@@ -3,7 +3,7 @@ import { RouterModule } from '@nestjs/core';
 import { routes } from './app.routes';
 import { HealthCheckModule } from './HealthCheck/HealthCheck.module';
 import { UserModule } from './User/User.module';
-import { MessageModule } from './Message/module';
+import { MessageModule } from './Message/Message.module';
 
 @Module({
   exports: [RouterModule],

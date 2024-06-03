@@ -1,6 +1,6 @@
 import { Routes } from '@nestjs/core';
 import { HealthCheckModule } from './HealthCheck/HealthCheck.module';
-import { MessageModule } from './Message/module';
+import { MessageModule } from './Message/Message.module';
 import { UserModule } from './User/User.module';
 
 export const routes: Routes = [

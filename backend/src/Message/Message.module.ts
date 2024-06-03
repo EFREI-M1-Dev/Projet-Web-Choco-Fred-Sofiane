@@ -1,8 +1,8 @@
 import { BullModule } from '@nestjs/bullmq';
-import { MessageResolver } from './resolver';
+import { MessageResolver } from './Message.resolver';
 import { Module } from '@nestjs/common';
-import { MessageController } from './controller';
-import { MessageService } from './service';
+import { MessageController } from './Message.controller';
+import { MessageService } from './Message.service';
 
 @Module({
   imports: [
