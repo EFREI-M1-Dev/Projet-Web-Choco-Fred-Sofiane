@@ -1,6 +1,7 @@
-import { Directive, Field, ID, ObjectType } from '@nestjs/graphql';
+import {Field, ID, ObjectType} from '@nestjs/graphql';
+import {ApiProperty} from "@nestjs/swagger";
 
-@ObjectType({ description: 'User' })
+@ObjectType({description: 'User'})
 export class User {
     @Field(type => ID)
     id: string;

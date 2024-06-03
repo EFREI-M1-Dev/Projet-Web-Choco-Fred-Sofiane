@@ -11,7 +11,6 @@ async function bootstrap() {
         .setTitle('Api messagerie backend')
         .setDescription('The API description')
         .setVersion('1.0')
-        .addTag('messagerie')
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
