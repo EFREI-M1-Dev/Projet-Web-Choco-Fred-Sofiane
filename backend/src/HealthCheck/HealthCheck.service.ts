@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectQueue} from '@nestjs/bullmq';
 import {Queue} from 'bullmq';
 import consola from "consola";
+import {HealthCheck} from "./models/HealthCheck.model";
 
 @Injectable()
 export class HealthCheckService {
@@ -17,5 +18,16 @@ export class HealthCheckService {
 
     async ping(): Promise<string> {
         return '🚀PONNNNG!!!!!!!!🚀';
+    }
+
+    async findOneById(id: string): Promise<HealthCheck> | null {
+        const healthCheck = await this.checkQueue.getJob(id);
+        if (!healthCheck) {
+            return null;
+        }
+        return {
+            id: healthCheck.id,
+            message: healthCheck.data.message,
+        };
     }
 }

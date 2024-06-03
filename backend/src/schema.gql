@@ -1,0 +1,13 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""HealthCheck"""
+type HealthCheck {
+  id: ID!
+  message: String!
+}
+
+type Query {
+  healthCheck(id: String!): HealthCheck!
+}
