@@ -16,7 +16,7 @@ export class MessageService {
     userId: number,
     content: string,
   ): Promise<void> {
-    const now = new Date();
+    const now: Date = new Date();
     const job = await this.messageQueue.add('message-job', {
       conversationId: conversationId,
       userId: userId,
@@ -32,6 +32,7 @@ export class MessageService {
     const message = await this.prisma.message.findUnique({
       where: {
         id: id,
+        deletedAt: null,
       },
     });
     if (!message) {
@@ -50,13 +51,45 @@ export class MessageService {
   }
 
   async editMessageContent(id: number, content: string): Promise<Message> {
-    const message = await this.prisma.message.update({
+    const message = await this.prisma.message.findFirst({
+      where: {
+        id: id,
+        deletedAt: null,
+      },
+    });
+
+    if (!message) {
+      throw new Error('Message not found');
+    }
+
+    const updatedMessage = await this.prisma.message.update({
       where: {
         id: id,
       },
       data: {
         content: content,
         updatedAt: new Date(),
+      },
+    });
+
+    return {
+      id: updatedMessage.id,
+      conversationId: updatedMessage.conversationId,
+      userId: updatedMessage.userId,
+      content: updatedMessage.content,
+      createdAt: updatedMessage.createdAt,
+      updatedAt: updatedMessage.updatedAt,
+      deletedAt: updatedMessage.deletedAt,
+    };
+  }
+
+  async deleteMessage(id: number): Promise<Message> {
+    const message = await this.prisma.message.update({
+      where: {
+        id: id,
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
 
@@ -69,15 +102,5 @@ export class MessageService {
       updatedAt: message.updatedAt,
       deletedAt: message.deletedAt,
     };
-  }
-
-  async deleteMessage(id: number): Promise<boolean> {
-    await this.prisma.message.delete({
-      where: {
-        id: id,
-      },
-    });
-
-    return true;
   }
 }

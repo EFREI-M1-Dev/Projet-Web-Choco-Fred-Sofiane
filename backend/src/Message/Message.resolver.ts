@@ -24,4 +24,17 @@ export class MessageResolver {
   ): Promise<void> {
     await this.messageService.addMessageJob(conversationId, userId, content);
   }
+
+  @Mutation(() => Message)
+  async editMessageContent(
+    @Param('id') id: number,
+    @Param('content') content: string,
+  ): Promise<Message> {
+    return this.messageService.editMessageContent(id, content);
+  }
+
+  @Mutation(() => Message)
+  async deleteMessage(@Param('id') id: number): Promise<Message> {
+    return this.messageService.deleteMessage(id);
+  }
 }

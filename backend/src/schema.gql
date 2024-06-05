@@ -33,16 +33,19 @@ type Message {
 }
 
 type Mutation {
-  addConversationJob: Conversation!
+  addConversation: Conversation!
   addMessageJob: Message!
   createUser: User!
-  deleteConversationJob: Conversation!
+  deleteConversation: Conversation!
+  deleteMessage: Message!
   deleteUser: User!
-  updateConversationJob: Conversation!
+  editMessageContent: Message!
+  updateConversation: Conversation!
 }
 
 type Query {
   conversation: Conversation!
+  findMessagesByConversationId: [Message!]!
   findOneById: User!
   healthCheck(id: String!): HealthCheck!
   message: Message!
