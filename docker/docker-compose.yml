@@ -29,7 +29,7 @@ services:
       - "${BACKEND_PORT}:3000"
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/${DATABASE_NAME}"
-      REDIS_HOST: "${REDIS_HOST}"
+      REDIS_HOST: redis
       REDIS_PASSWORD: "${REDIS_PASSWORD}"
       PORT: "${BACKEND_PORT}"
     depends_on:
