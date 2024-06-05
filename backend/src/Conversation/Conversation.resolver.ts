@@ -2,6 +2,7 @@ import { Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Conversation } from './Conversation.model';
 import { ConversationService } from './Conversation.service';
 import {NotFoundException, Param} from '@nestjs/common';
+import { Message } from '../Message/Message.model';
 
 @Resolver(of => Conversation)
 export class ConversationResolver {
@@ -16,15 +17,20 @@ export class ConversationResolver {
         return user;
     }
 
+    @Query(returns => [Message])
+    async findMessagesByConversationId(@Param('id') id: number): Promise<Message[]> {
+        return this.conversationService.findMessagesByConversationId(id);
+    }
+
     @Mutation(returns => Conversation)
-    async addConversationJob(
+    async addConversation(
         @Param('name') name: string,
     ): Promise<void> {
         await this.conversationService.addConversation(name);
     }
 
     @Mutation(returns => Conversation)
-    async updateConversationJob(
+    async updateConversation(
         @Param('id') id: number,
         @Param('name') name: string,
     ): Promise<void> {
@@ -32,7 +38,7 @@ export class ConversationResolver {
     }
 
     @Mutation(returns => Conversation)
-    async deleteConversationJob(
+    async deleteConversation(
         @Param('id') id: number,
     ): Promise<void> {
         await this.conversationService.deleteConversation(id);
