@@ -3,7 +3,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 @ObjectType({ description: 'Message' })
 export class Message {
   @Field((type) => ID)
-  id: string;
+  id: number;
 
   @Field()
   conversationId: number;
@@ -19,7 +19,4 @@ export class Message {
 
   @Field()
   updatedAt: Date;
-
-  @Field()
-  deletedAt: Date;
 }
