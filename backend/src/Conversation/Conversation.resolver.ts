@@ -8,7 +8,7 @@ export class ConversationResolver {
   constructor(private readonly conversationService: ConversationService) {}
 
     @Query(returns => Conversation)
-    async conversation(@Param('id') id: string): Promise<Conversation> {
+    async conversation(@Param('id') id: number): Promise<Conversation> {
         const user = await this.conversationService.findOneById(id);
         if (!user) {
             throw new NotFoundException(id);
@@ -20,21 +20,21 @@ export class ConversationResolver {
     async addConversationJob(
         @Param('name') name: string,
     ): Promise<void> {
-        await this.conversationService.addConversationJob(name);
+        await this.conversationService.addConversation(name);
     }
 
     @Mutation(returns => Conversation)
     async updateConversationJob(
-        @Param('id') id: string,
+        @Param('id') id: number,
         @Param('name') name: string,
     ): Promise<void> {
-        await this.conversationService.updateConversationJob(id, name);
+        await this.conversationService.updateConversation(id, name);
     }
 
     @Mutation(returns => Conversation)
     async deleteConversationJob(
-        @Param('id') id: string,
+        @Param('id') id: number,
     ): Promise<void> {
-        await this.conversationService.deleteConversationJob(id);
+        await this.conversationService.deleteConversation(id);
     }
 }
