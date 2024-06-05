@@ -5,7 +5,6 @@
 """Conversation"""
 type Conversation {
   createdAt: DateTime!
-  deletedAt: DateTime!
   id: ID!
   name: String!
   updatedAt: DateTime!

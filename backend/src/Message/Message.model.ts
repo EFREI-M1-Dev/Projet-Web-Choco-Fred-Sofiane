@@ -19,4 +19,7 @@ export class Message {
 
   @Field()
   updatedAt: Date;
+
+  @Field()
+  deletedAt: Date | null;
 }

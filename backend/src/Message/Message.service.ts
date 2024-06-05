@@ -45,6 +45,7 @@ export class MessageService {
       content: message.content,
       createdAt: message.createdAt,
       updatedAt: message.updatedAt,
+      deletedAt: message.deletedAt,
     };
   }
 
@@ -66,6 +67,7 @@ export class MessageService {
       content: message.content,
       createdAt: message.createdAt,
       updatedAt: message.updatedAt,
+      deletedAt: message.deletedAt,
     };
   }
 
