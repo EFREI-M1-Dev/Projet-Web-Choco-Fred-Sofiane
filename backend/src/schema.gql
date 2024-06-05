@@ -4,8 +4,11 @@
 
 """Conversation"""
 type Conversation {
+  createdAt: DateTime!
+  deletedAt: DateTime!
   id: ID!
   name: String!
+  updatedAt: DateTime!
 }
 
 """
@@ -31,7 +34,10 @@ type Message {
 }
 
 type Mutation {
+  addConversationJob: Conversation!
   addMessageJob: Message!
+  deleteConversationJob: Conversation!
+  updateConversationJob: Conversation!
 }
 
 type Query {
