@@ -4,6 +4,8 @@ WORKDIR /app/backend
 
 COPY . .
 
+RUN ["npm", "install"]
+
 # backend
 EXPOSE 3000
 
