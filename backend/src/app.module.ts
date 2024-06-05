@@ -19,7 +19,7 @@ import {HealthCheckResolver} from "./HealthCheck/HealthCheck.resolver";
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({
                 connection: {
-                    host: 'localhost',
+                    host: configService.get<string>('REDIS_HOST'),
                     port: 6379,
                     password: configService.get<string>('REDIS_PASSWORD'),
                 },
