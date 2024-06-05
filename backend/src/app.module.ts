@@ -30,7 +30,6 @@ import {HealthCheckResolver} from "./HealthCheck/HealthCheck.resolver";
             isGlobal: true,
         })
     ],
-
 })
 export class AppModule {
 }

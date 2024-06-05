@@ -1,23 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
 import { User } from './User.model';
+import {PrismaService} from "../prisma.service";
 
 @Injectable()
 export class UserService {
-  constructor(@InjectQueue('user-queue') private readonly userQueue: Queue) {
+  constructor(private prisma: PrismaService) {
   }
 
-  async findOneById(id: string): Promise<User> | null {
-    const user = await this.userQueue.getJob(id);
+  async findOneById(id: number): Promise<User> | null {
+    const user = await this.prisma.user.findUnique({
+        where: {
+            id: id,
+        },
+        });
+
     if (!user) {
-      return null;
+        return null;
     }
+
     return {
-      id: user.id,
-      username: user.data.username,
-      email: user.data.email,
-      password: user.data.password,
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        password: user.password,
     };
   }
 }
