@@ -21,6 +21,21 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+
+  backend:
+    image: ghcr.io/efrei-m1-dev/projetfinal-messagerie-choco-fred-sofiane:backend-latest
+    restart: always
+    ports:
+      - "${BACKEND_PORT}:3000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:${DATABASE_PORT}/${DATABASE_NAME}"
+      REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379"
+      PORT: "${BACKEND_PORT}"
+    depends_on:
+      - db
+      - redis
+
+
 volumes:
   postgres_data:
   cache:

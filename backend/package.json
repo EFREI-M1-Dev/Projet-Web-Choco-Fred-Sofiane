@@ -8,8 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "prestart": "npm run start:docker && npm run prisma:generate && npm run prisma:migrate",
-    "start": "npm run start:docker && nest start",
+    "prestart": "npm run prisma:generate && npm run prisma:migrate",
+    "start": "npm run prestart && nest start",
     "start:dev": "npm run prestart && nest start --watch",
     "start:debug": "npm run prestart && nest start --debug --watch",
     "start:prod": "npm run prestart && node dist/main",
