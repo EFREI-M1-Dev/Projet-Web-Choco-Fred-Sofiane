@@ -32,4 +32,9 @@ export class UserResolver {
         return this.userService.deleteUser(id);
     }
 
+    @Mutation(returns => User)
+    async joinConversation(@Param('userId') userId: number, @Param('conversationId') conversationId: number): Promise<User> {
+        return this.userService.joinConversation(userId, conversationId);
+    }
+
 }

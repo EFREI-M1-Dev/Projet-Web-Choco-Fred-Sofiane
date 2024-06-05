@@ -101,4 +101,52 @@ export class UserService {
         });
     }
 
+    async joinConversation(userId: number, conversationId: number): Promise<User> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                conversations: true,
+            },
+        });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const conversation = await this.prisma.conversation.findUnique({
+            where: {
+                id: conversationId,
+            },
+        });
+
+        if (!conversation) {
+            throw new Error('Conversation not found');
+        }
+
+        const updatedUser = await this.prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                conversations: {
+                    connect: {
+                        id: conversationId,
+                    },
+                },
+            },
+        });
+
+        if (!updatedUser) {
+            throw new Error('User not updated');
+        }
+
+        return {
+            id: updatedUser.id,
+            email: updatedUser.email,
+            username: updatedUser.username,
+            password: updatedUser.password,
+        };
+    }
 }
