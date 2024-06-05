@@ -2,6 +2,7 @@ import {Mutation, Query, Resolver} from '@nestjs/graphql';
 import { User } from './User.model';
 import { UserService } from './User.service';
 import {NotFoundException, Param} from '@nestjs/common';
+import {Conversation} from "../Conversation/Conversation.model";
 
 @Resolver(of => User)
 export class UserResolver {
@@ -14,6 +15,11 @@ export class UserResolver {
             throw new NotFoundException(id);
         }
         return user;
+    }
+
+    @Query(returns => [Conversation])
+    async findConversations(@Param('id') id: number): Promise<Conversation[]> {
+        return this.userService.getConversationByUserId(id);
     }
 
     @Mutation(returns => User)

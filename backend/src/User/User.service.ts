@@ -1,8 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {User} from './User.model';
 import {PrismaService} from "../prisma.service";
-import {Prisma} from "@prisma/client";
-
+import {Conversation, Prisma} from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -29,9 +28,7 @@ export class UserService {
     }
 
     async createUser(data: User): Promise<User> {
-
         try {
-
             const user = await this.prisma.user.create({
                 data: {
                     email: data.email,
@@ -78,6 +75,30 @@ export class UserService {
             username: user.username,
             password: user.password,
         };
+    }
+
+    async getConversationByUserId(userId: number): Promise<Conversation[]> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+            include: {
+                conversations: true,
+            },
+        });
+
+        if (!user) {
+            return [];
+        }
+
+        return user.conversations.map((conversation) => {
+            return {
+                id: conversation.id,
+                name: conversation.name,
+                createdAt: conversation.createdAt,
+                updatedAt: conversation.updatedAt
+            };
+        });
     }
 
 }
