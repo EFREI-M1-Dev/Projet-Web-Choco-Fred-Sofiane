@@ -37,7 +37,9 @@ type Mutation {
   addMessageJob: Message!
   createUser: User!
   deleteConversation: Conversation!
+  deleteMessage: Message!
   deleteUser: User!
+  editMessageContent: Message!
   updateConversation: Conversation!
 }
 
