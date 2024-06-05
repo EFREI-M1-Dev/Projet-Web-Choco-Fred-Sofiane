@@ -21,8 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma": "prisma",
     "prisma:generate": "dotenv -e ../.env -c --  prisma generate",
-    "prisma:migrate": "dotenv -e ../.env -c --  prisma migrate dev",
-    "dotenv": "dotenv"
+    "prisma:migrate": "dotenv -e ../.env -c --  prisma migrate dev"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
@@ -35,6 +34,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "^5.14.0",
     "consola": "^3.2.3",
+    "dotenv-cli": "^7.4.2",
     "graphql": "^16.8.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
