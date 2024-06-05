@@ -57,5 +57,5 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            cd /home/${{ secrets.VPS_USERNAME }}/app/projetFinal
+            cd /home/${{ secrets.VPS_USERNAME }}/app/projetFinal/docker
             docker-compose --env-file ./.env -f ./docker-compose.yml up -d
