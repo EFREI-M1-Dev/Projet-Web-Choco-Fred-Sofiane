@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { Message } from './Message.model';
+import {AddMessageJobInput, Message} from './Message.model';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -11,21 +11,19 @@ export class MessageService {
     private prisma: PrismaService,
   ) {}
 
-  async addMessageJob(
-    conversationId: number,
-    userId: number,
-    content: string,
-  ): Promise<void> {
+  async addMessageJob(data : AddMessageJobInput): Promise<string> {
     const now: Date = new Date();
     const job = await this.messageQueue.add('message-job', {
-      conversationId: conversationId,
-      userId: userId,
-      content: content,
+      conversationId: data.conversationId,
+      userId: data.userId,
+      content: data.content,
       createdAt: now,
       updatedAt: now,
       deletedAt: null,
     });
     console.log(`Message job added with id: ${job.id}`);
+
+    return job.id;
   }
 
   async findOneById(id: number): Promise<Message> | null {

@@ -1,4 +1,16 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import {Field, ID, InputType, ObjectType} from '@nestjs/graphql';
+
+@InputType({ description: 'Input type for creating a new message' })
+export class AddMessageJobInput {
+  @Field()
+  conversationId: number;
+
+  @Field()
+  userId: number;
+
+  @Field()
+  content: string;
+}
 
 @ObjectType({ description: 'Message' })
 export class Message {

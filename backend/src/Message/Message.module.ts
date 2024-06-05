@@ -3,6 +3,7 @@ import { MessageResolver } from './Message.resolver';
 import { Module } from '@nestjs/common';
 import { MessageService } from './Message.service';
 import { PrismaService } from '../prisma.service';
+import {MessageProcessor} from "./message.processor";
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { PrismaService } from '../prisma.service';
     }),
   ],
   controllers: [],
-  providers: [MessageService, MessageResolver, PrismaService],
+  providers: [MessageService, MessageProcessor, MessageResolver, PrismaService],
 })
 export class MessageModule {}

@@ -8,15 +8,26 @@ export class ConversationService {
   constructor(private prisma: PrismaService) {
   }
 
-  async addConversation(name: string): Promise<void> {
+  async addConversation(name: string): Promise<Conversation> {
     const now = new Date();
-    await this.prisma.conversation.create({
+    const conversation = await this.prisma.conversation.create({
       data: {
         name: name,
         createdAt: now,
         updatedAt: now,
       },
     });
+
+    if(!conversation) {
+      throw new Error('Failed to create conversation');
+    }
+
+    return {
+      id: conversation.id,
+      name: conversation.name,
+      createdAt: conversation.createdAt,
+      updatedAt: conversation.updatedAt,
+    };
   }
 
   async updateConversation(id: number, name: string): Promise<void> {

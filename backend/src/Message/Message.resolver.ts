@@ -1,14 +1,14 @@
-import { Message } from './Message.model';
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import {AddMessageJobInput, Message} from './Message.model';
+import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
 import { MessageService } from './Message.service';
-import { NotFoundException, Param } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
 @Resolver(() => Message)
 export class MessageResolver {
   constructor(private readonly messageService: MessageService) {}
 
   @Query(() => Message)
-  async message(@Param('id') id: number): Promise<Message> {
+  async message(@Args('id') id: number): Promise<Message> {
     const message = await this.messageService.findOneById(id);
     if (!message) {
       throw new NotFoundException(id);
@@ -16,25 +16,21 @@ export class MessageResolver {
     return message;
   }
 
-  @Mutation(() => Message)
-  async addMessageJob(
-    @Param('conversationId') conversationId: number,
-    @Param('userId') userId: number,
-    @Param('content') content: string,
-  ): Promise<void> {
-    await this.messageService.addMessageJob(conversationId, userId, content);
+  @Mutation(() => String)
+  async addMessageJob( @Args('data') data: AddMessageJobInput): Promise<string> {
+    return await this.messageService.addMessageJob(data);
   }
 
   @Mutation(() => Message)
   async editMessageContent(
-    @Param('id') id: number,
-    @Param('content') content: string,
+    @Args('id') id: number,
+    @Args('content') content: string,
   ): Promise<Message> {
     return this.messageService.editMessageContent(id, content);
   }
 
   @Mutation(() => Message)
-  async deleteMessage(@Param('id') id: number): Promise<Message> {
+  async deleteMessage(@Args('id') id: number): Promise<Message> {
     return this.messageService.deleteMessage(id);
   }
 }

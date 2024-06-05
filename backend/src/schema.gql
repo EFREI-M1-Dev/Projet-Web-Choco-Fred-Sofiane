@@ -2,12 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""Input type for creating a new message"""
+input AddMessageJobInput {
+  content: String!
+  conversationId: Float!
+  userId: Float!
+}
+
 """Conversation"""
 type Conversation {
   createdAt: DateTime!
   id: ID!
   name: String!
   updatedAt: DateTime!
+}
+
+"""Input type for creating a user"""
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
 }
 
 """
@@ -33,23 +47,24 @@ type Message {
 }
 
 type Mutation {
-  addConversation: Conversation!
-  addMessageJob: Message!
-  createUser: User!
-  deleteConversation: Conversation!
-  deleteMessage: Message!
-  deleteUser: User!
-  editMessageContent: Message!
-  updateConversation: Conversation!
+  addConversation(name: String!): Conversation!
+  addMessageJob(data: AddMessageJobInput!): String!
+  createUser(data: CreateUserInput!): User!
+  deleteConversation(id: Float!): Conversation!
+  deleteMessage(id: Float!): Message!
+  deleteUser(id: Float!): User!
+  editMessageContent(content: String!, id: Float!): Message!
+  joinConversation(conversationId: Float!, userId: Float!): User!
+  updateConversation(id: Float!, name: String!): Conversation!
 }
 
 type Query {
-  conversation: Conversation!
-  findConversations: [Conversation!]!
-  findMessagesByConversationId: [Message!]!
-  findOneById: User!
+  conversation(id: Float!): Conversation!
+  findConversations(id: Float!): [Conversation!]!
+  findMessagesByConversationId(id: Float!): [Message!]!
+  findOneById(id: Float!): User!
   healthCheck(id: String!): HealthCheck!
-  message: Message!
+  message(id: Float!): Message!
 }
 
 """User"""
