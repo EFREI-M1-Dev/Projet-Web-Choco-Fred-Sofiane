@@ -18,7 +18,6 @@ describe('ConversationService', () => {
 
       const conversation = await conversationService.addConversation('test');
       expect(conversation.name).toBe('test');
-      console.log(conversation);
     });
   });
 
@@ -37,7 +36,6 @@ describe('ConversationService', () => {
 
       const conversation = await conversationService.updateConversation(1, 'updated');
       expect(conversation.name).toBe('updated');
-      console.log(conversation);
     });
   });
 
@@ -47,7 +45,6 @@ describe('ConversationService', () => {
 
       const conversation = await conversationService.deleteConversation(1);
       expect(conversation).toBeUndefined();
-      console.log(conversation);
     });
   });
 
@@ -59,7 +56,6 @@ describe('ConversationService', () => {
 
       const conversation = await conversationService.findOneById(1);
       expect(conversation.id).toBe(1);
-      console.log(conversation);
     });
   });
 });

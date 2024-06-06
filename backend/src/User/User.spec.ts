@@ -40,6 +40,8 @@ describe('UserService', () => {
         email: 'test@example.com',
         username: 'testuser',
         password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
 
@@ -67,6 +69,8 @@ describe('UserService', () => {
         email: 'test@example.com',
         username: 'testuser',
         password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       jest.spyOn(prismaService.user, 'create').mockResolvedValue(mockUser);
 
@@ -80,7 +84,7 @@ describe('UserService', () => {
         username: 'testuser',
         password: 'password',
       };
-      const prismaError = new Prisma.PrismaClientKnownRequestError('Email already exists', 'P2002', '1');
+      const prismaError = new Prisma.PrismaClientKnownRequestError('Email already exists', {code: 'P2002', meta: null, clientVersion: '', batchRequestIdx:1});
       jest.spyOn(prismaService.user, 'create').mockRejectedValue(prismaError);
 
       await expect(userService.createUser(input)).rejects.toThrow('Email already exists');
@@ -105,6 +109,8 @@ describe('UserService', () => {
         email: 'test@example.com',
         username: 'testuser',
         password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       jest.spyOn(prismaService.user, 'delete').mockResolvedValue(mockUser);
 
@@ -134,6 +140,8 @@ describe('UserService', () => {
         email: 'test@example.com',
         username: 'testuser',
         password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         conversations: mockConversations,
       };
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
@@ -157,6 +165,8 @@ describe('UserService', () => {
         email: 'test@example.com',
         username: 'testuser',
         password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         conversations: [],
       };
       const mockConversation = {
@@ -175,7 +185,7 @@ describe('UserService', () => {
       jest.spyOn(prismaService.user, 'update').mockResolvedValue(updatedUser);
 
       const result = await userService.joinConversation(1, 1);
-      expect(result.conversations).toContainEqual(mockConversation);
+        expect(result.conversations).toContainEqual(mockConversation);
     });
 
     it('should throw an error if user not found', async () => {
@@ -190,6 +200,8 @@ describe('UserService', () => {
         email: 'test@example.com',
         username: 'testuser',
         password: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         conversations: [],
       };
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
