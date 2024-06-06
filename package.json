@@ -5,12 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "nest": "nest"
+    "nest": "nest",
+    "start": "cd backend && npm run start",
+    "start:docker": "docker-compose --env-file ./.env -f ./docker/docker-compose.yml up -d"
   },
   "keywords": [],
   "author": "@Fredray-21",
-  "license": "ISC",
-  "dependencies": {
-    "@nestjs/cli": "^10.3.2"
-  }
+  "license": "ISC"
 }
