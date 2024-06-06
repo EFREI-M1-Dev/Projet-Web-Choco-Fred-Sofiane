@@ -9,12 +9,9 @@ export class ConversationService {
   }
 
   async addConversation(name: string): Promise<Conversation> {
-    const now = new Date();
     const conversation = await this.prisma.conversation.create({
       data: {
         name: name,
-        createdAt: now,
-        updatedAt: now,
       },
     });
 
@@ -30,15 +27,24 @@ export class ConversationService {
     };
   }
 
-  async updateConversation(id: number, name: string): Promise<void> {
-    const now = new Date();
-    await this.prisma.conversation.update({
+  async updateConversation(id: number, name: string): Promise<Conversation> {
+    const conversation = await this.prisma.conversation.update({
       where: { id: id },
       data: {
         name: name,
-        updatedAt: now,
       },
     });
+
+    if (!conversation) {
+      throw new Error('Failed to update conversation');
+    }
+
+    return {
+      id: conversation.id,
+      name: conversation.name,
+      createdAt: conversation.createdAt,
+      updatedAt: conversation.updatedAt,
+    };
   }
 
   async deleteConversation(id: number): Promise<void> {
