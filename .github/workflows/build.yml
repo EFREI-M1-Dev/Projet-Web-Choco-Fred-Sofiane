@@ -50,7 +50,7 @@ jobs:
           source: "docker/docker-compose.yml,.env"
           target: "/home/${{ secrets.VPS_USERNAME }}/app/projetFinal"
 
-      - name: SSH into VPS and deploy
+      - name: SSH into VPS and deploy backend
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -59,3 +59,10 @@ jobs:
           script: |
             cd /home/${{ secrets.VPS_USERNAME }}/app/projetFinal/docker
             docker-compose --env-file ../.env -f docker-compose.yml up -d
+
+      - name: Deploy backend to Render
+        uses: render-deploy-action@1.0.0
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
