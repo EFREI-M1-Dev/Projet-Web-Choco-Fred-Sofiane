@@ -1,19 +1,4 @@
-databases:
-  - name: postgres
-    plan: free
-    region: frankfurt
-    ipAllowList: []
-    databaseName: db
-    user: postgres_user
-    postgresMajorVersion: "16"
-
 services:
-  - type: redis
-    name: redis
-    ipAllowList: []
-    plan: free
-    maxmemoryPolicy: allkeys-lru
-
   - type: web
     name: backend
     env: docker
