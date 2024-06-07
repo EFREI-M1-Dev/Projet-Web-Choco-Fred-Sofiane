@@ -24,6 +24,8 @@ export class UserService {
             email: user.email,
             username: user.username,
             password: user.password,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
         };
     }
 
@@ -46,6 +48,8 @@ export class UserService {
                 email: user.email,
                 username: user.username,
                 password: user.password,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
             };
 
         } catch (error) {
@@ -74,6 +78,8 @@ export class UserService {
             email: user.email,
             username: user.username,
             password: user.password,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
         };
     }
 
@@ -136,6 +142,7 @@ export class UserService {
                     },
                 },
             },
+            include: {conversations: true},
         });
 
         if (!updatedUser) {
@@ -147,6 +154,9 @@ export class UserService {
             email: updatedUser.email,
             username: updatedUser.username,
             password: updatedUser.password,
-        };
-    }
+            createdAt: updatedUser.createdAt,
+            updatedAt: updatedUser.updatedAt,
+            conversations: updatedUser.conversations
+        }
+    };
 }
