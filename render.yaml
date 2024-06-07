@@ -1,3 +1,20 @@
+databases:
+  - name: postgres
+    plan: free
+    region: frankfurt
+    ipAllowList: []
+    databaseName: postgres
+    user: postgres
+    postgresMajorVersion: "16"
+    envVars:
+      - key: POSTGRES_DB
+        value: ${DATABASE_NAME}
+      - key: POSTGRES_USER
+        value: postgres
+      - key: POSTGRES_PASSWORD
+        value: postgres
+
+
 services:
   - type: redis
     name: redis
@@ -35,19 +52,4 @@ services:
       - db
       - redis
 
-databases:
-  - name: postgres
-    engine: postgres
-    version: latest
-    plan: free
-    envVars:
-      - key: POSTGRES_DB
-        value: ${DATABASE_NAME}
-      - key: POSTGRES_USER
-        value: postgres
-      - key: POSTGRES_PASSWORD
-        value: postgres
-    disks:
-      - name: postgres_data
-        mountPath: /var/lib/postgresql/data
-        sizeGB: 10
+
