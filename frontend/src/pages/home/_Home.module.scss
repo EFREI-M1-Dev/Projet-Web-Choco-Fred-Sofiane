@@ -1,0 +1,24 @@
+.containerHome
+{
+  height : 100%;
+}
+
+.ContainerConversation
+{
+  display        : flex;
+  flex-direction : column;
+  gap            : 1em;
+  height         : 20em;
+  overflow       : auto;
+  width          : fit-content;
+}
+
+.ContainerMessage
+{
+  display        : flex;
+  flex-direction : column;
+  gap            : 1em;
+  height         : 20em;
+  overflow       : auto;
+  width          : fit-content;
+}

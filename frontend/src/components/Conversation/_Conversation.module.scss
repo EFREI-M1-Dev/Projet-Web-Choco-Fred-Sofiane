@@ -1,0 +1,18 @@
+
+.container
+{
+  display         : flex;
+  align-items     : center;
+  gap             : 1em;
+
+  p
+  {
+    margin : 0;
+  }
+
+  .heure
+  {
+    font-size : 0.8em;
+    color     : #999;
+  }
+}
