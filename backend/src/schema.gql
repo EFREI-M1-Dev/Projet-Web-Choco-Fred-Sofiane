@@ -69,8 +69,11 @@ type Query {
 
 """User"""
 type User {
+  conversations: [Conversation!]
+  createdAt: DateTime!
   email: String!
   id: ID!
   password: String!
+  updatedAt: DateTime!
   username: String!
 }
