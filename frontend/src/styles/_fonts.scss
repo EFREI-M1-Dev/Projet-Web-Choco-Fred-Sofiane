@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+
+@mixin roboto($weight, $style: normal) {
+    font-family: "Roboto", sans-serif;
+    font-weight: $weight;
+    font-style: $style;
+}
+
+$weights: 400 500 700;
+$styles: normal italic;
+
+@each $weight in $weights {
+    .roboto-#{$weight} {
+        @include roboto($weight);
+    }
+    .roboto-#{$weight}-italic {
+        @include roboto($weight, italic);
+    }
+}

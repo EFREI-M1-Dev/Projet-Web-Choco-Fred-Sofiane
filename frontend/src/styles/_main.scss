@@ -1,7 +1,17 @@
 @import "variables";
 
-html, body, #root
-{
-  margin : 0;
-  height : 100%;
+html, body, #root {
+    margin: 0;
+    height: 100%;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    color: $dark;
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0;
 }

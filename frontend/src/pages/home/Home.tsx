@@ -2,6 +2,7 @@ import {Button} from "../../components/Button/Button";
 import {TextField} from "../../components/TextField/TextField";
 import {useState} from "react";
 import {Conversation} from "../../components/Conversation/Conversation";
+import logo from '../../assets/logo.svg';
 
 import styles from './_Home.module.scss';
 import {Message} from "../../components/Message/Message";
@@ -31,35 +32,43 @@ const Home = () => {
 
     return (
         <div className={styles.containerHome}>
-            <Button onClick={() => console.log("Button clicked")}>Click meee</Button>
-            <TextField
-                type={"text"}
-                value={inputValue}
-                onChange={(event) => setInputValue(event.target.value)}
-            />
+            <div id="sidebar" className={styles.sidebar}>
+                <div className={styles.top}>
+                    <div className={styles.logo}>
+                        <img src={logo} alt="logo"/>
+                    </div>
 
-            <div className={styles.ContainerConversation}>
-                {arrayRandomConversation.map((conversation, index) => (
-                    <Conversation
-                        key={index}
-                        name={conversation.name}
-                        lastMessage={conversation.lastMessage}
-                        lastMessageDate={conversation.lastMessageDate}
-                    />
-                ))}
+                    <div className={styles.welcomeMessage}>
+                        <h4>Bonjour Sofiane</h4>
+                        <p>Nous vous souhaitons une agréable journée.</p>
+                    </div>
+                </div>
+
+                <div className={styles.conversations}>
+                    <h4>Discussions</h4>
+                    <div className={styles.conversationsList}>
+                        <div className={styles.conversationComponent}>
+                            <div className={styles.profilePic}>
+                                D
+                            </div>
+                            <div className={styles.content}>
+                                <div className={styles.top}>
+                                    <div className={styles.name}>
+                                        Dorian
+                                    </div>
+                                    <div className={styles.time}>
+                                        9:45
+                                    </div>
+                                </div>
+                                <div className={styles.message}>
+                                    Salut
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className={styles.ContainerMessage}>
-                {arrayRandomMessage.map((message, index) => (
-                    <Message
-                        key={index}
-                        content={message.content}
-                        username={message.username}
-                        createdAt={message.createdAt}
-                        myMessage={message.myMessage}
-                    />
-                ))}
-            </div>
         </div>
     )
 }
