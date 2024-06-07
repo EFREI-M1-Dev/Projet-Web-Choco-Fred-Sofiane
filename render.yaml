@@ -12,23 +12,6 @@ services:
       - name: redis
         port: 6379
 
-  - type: database
-    name: db
-    plan: free
-    engine: postgres
-    version: latest
-    envVars:
-      - key: POSTGRES_DB
-        value: ${DATABASE_NAME}
-      - key: POSTGRES_USER
-        value: postgres
-      - key: POSTGRES_PASSWORD
-        value: postgres
-    disks:
-      - name: postgres_data
-        mountPath: /var/lib/postgresql/data
-        sizeGB: 10
-
   - type: web
     name: backend
     env: docker
