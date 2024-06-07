@@ -3,17 +3,9 @@ databases:
     plan: free
     region: frankfurt
     ipAllowList: []
-    databaseName: postgres
+    databaseName: ${DATABASE_NAME}
     user: postgres
     postgresMajorVersion: "16"
-    envVars:
-      - key: POSTGRES_DB
-        value: ${DATABASE_NAME}
-      - key: POSTGRES_USER
-        value: postgres
-      - key: POSTGRES_PASSWORD
-        value: postgres
-
 
 services:
   - type: redis
