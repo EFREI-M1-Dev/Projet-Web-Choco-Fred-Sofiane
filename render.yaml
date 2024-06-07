@@ -3,7 +3,7 @@ databases:
     plan: free
     region: frankfurt
     ipAllowList: []
-    databaseName: ${DATABASE_NAME}
+    databaseName: db
     user: postgres
     postgresMajorVersion: "16"
 
