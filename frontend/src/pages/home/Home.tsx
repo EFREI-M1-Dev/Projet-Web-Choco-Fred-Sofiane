@@ -3,6 +3,7 @@ import {TextField} from "../../components/TextField/TextField";
 import {useState} from "react";
 import {Conversation} from "../../components/Conversation/Conversation";
 import logo from '../../assets/logo.svg';
+import PaperPlane from '../../assets/paper-plane.svg';
 
 import styles from './_Home.module.scss';
 import {Message} from "../../components/Message/Message";
@@ -69,6 +70,52 @@ const Home = () => {
                 </div>
             </div>
 
+            <div className={styles.conversationWrapper}>
+                <div className={styles.header}>
+                    <div className={styles.conversationComponent}>
+                        <div className={styles.profilePic}>
+                            D
+                        </div>
+                        <div className={styles.content}>
+                            <div className={styles.top}>
+                                <div className={styles.name}>
+                                    Dorian
+                                </div>
+                            </div>
+                            <div className={styles.message}>
+                                Dernier message aujourd’hui à 9H45
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.messagesWrapper}>
+                    <div className={styles.messagesList}>
+
+                        <div className={styles.messageWrapper}>
+                            <div className={styles.message}>
+                                <div className={styles.name}>
+                                    Dorian
+                                </div>
+                                <div>
+                                    <p>Ceci est un message d'exemple</p>
+                                    <div className={styles.time}>
+                                        10H54
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div className={styles.footer}>
+                <input type="text" placeholder="Écrivez un message"/>
+                    <Button onClick={() => {}}>
+                        <img src={PaperPlane} alt="send"/>
+                    </Button>
+                </div>
+            </div>
         </div>
     )
 }
