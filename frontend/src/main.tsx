@@ -7,6 +7,7 @@ import client from "./apolloClient";
 import HomePage from "./pages/home/Home";
 import ErrorPage from "./pages/error/Error";
 import AuthentificationPage from "./pages/authentification/Authentification";
+import "./styles/_main.scss";
 
 import useMainController, {UseMainControllerReturnType} from './controller/controllerMain';
 // import {AuthProvider} from "./provider/AuthProvider";
