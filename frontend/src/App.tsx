@@ -1,7 +1,10 @@
-import Home from "./pages/home/Home";
+import { Outlet } from 'react-router-dom';
 
 const App = () => {
-    return <Home />
+
+    return (
+        <Outlet/>
+    )
 }
 
 export default App

@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {CreateUserInput, User} from './User.model';
 import {PrismaService} from "../prisma.service";
 import {Conversation, Prisma} from "@prisma/client";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -31,11 +32,13 @@ export class UserService {
 
     async createUser(data: CreateUserInput): Promise<User> {
         try {
+            const hashedPassword = await bcrypt.hash(data.password, 10);
+
             const user = await this.prisma.user.create({
                 data: {
                     email: data.email,
                     username: data.username,
-                    password: data.password,
+                    password: hashedPassword,
                 },
             });
 
@@ -49,7 +52,7 @@ export class UserService {
                 username: user.username,
                 password: user.password,
                 createdAt: user.createdAt,
-                updatedAt: user.updatedAt
+                updatedAt: user.updatedAt,
             };
 
         } catch (error) {
@@ -61,7 +64,6 @@ export class UserService {
             throw new Error('User not created');
         }
     }
-
     async deleteUser(id: number): Promise<User> {
         const user = await this.prisma.user.delete({
             where: {
@@ -159,4 +161,5 @@ export class UserService {
             conversations: updatedUser.conversations
         }
     };
+
 }

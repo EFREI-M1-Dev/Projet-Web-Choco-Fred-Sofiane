@@ -3,8 +3,8 @@ import React from "react";
 
 export const Button = (
     props: {
-        onClick: () => void,
-        children?: string | React.ReactElement
+        onClick?: () => void,
+        children: string | React.ReactElement
     }
 ) => (
     <button
