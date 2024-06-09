@@ -10,7 +10,7 @@ import AuthentificationPage from "./pages/authentification/Authentification";
 import "./styles/_main.scss";
 
 import useMainController, {UseMainControllerReturnType} from './controller/controllerMain';
-// import {AuthProvider} from "./provider/AuthProvider";
+import {AuthProvider} from "./provider/AuthProvider";
 
 const MainControllerContext = createContext<UseMainControllerReturnType | undefined>(undefined);
 
@@ -50,11 +50,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <MainControllerProvider>
-            {/*<AuthProvider>*/}
-                <ApolloProvider client={client}>
+            <ApolloProvider client={client}>
+                <AuthProvider>
                     <RouterProvider router={router}/>
-                </ApolloProvider>
-            {/*</AuthProvider>*/}
+                </AuthProvider>
+            </ApolloProvider>
         </MainControllerProvider>
     </React.StrictMode>
 );

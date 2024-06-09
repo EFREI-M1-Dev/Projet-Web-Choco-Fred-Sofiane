@@ -10,24 +10,33 @@ export class UserService {
     }
 
     async findOneById(id: number): Promise<User> | null {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id: id,
-            },
-        });
 
-        if (!user) {
+        if (!id) throw new Error('User ID is required');
+
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: id,
+                },
+            });
+
+            if (!user) {
+                console.error(`findOneById: User not found for id ${id}`);
+                return null;
+            }
+
+            return {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                password: user.password,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            };
+        } catch (error) {
+            console.error('findOneById: Error fetching user', error);
             return null;
         }
-
-        return {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            password: user.password,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt
-        };
     }
 
     async createUser(data: CreateUserInput): Promise<User> {
@@ -64,6 +73,7 @@ export class UserService {
             throw new Error('User not created');
         }
     }
+
     async deleteUser(id: number): Promise<User> {
         const user = await this.prisma.user.delete({
             where: {

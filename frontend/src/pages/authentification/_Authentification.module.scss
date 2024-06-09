@@ -1,0 +1,28 @@
+.containerAuth
+{
+  display          : flex;
+  justify-content  : center;
+  align-items      : center;
+  flex-direction   : column;
+  flex             : 1;
+  background-color : #f5f5f5;
+
+
+  .containerForm
+  {
+    width   : 400px;
+    padding : 20px;
+
+    .button
+    {
+      width : 100%;
+    }
+
+    input
+    {
+      height        : 3em;
+      margin-bottom : 1em;
+      padding       : 0 1em;
+    }
+  }
+}

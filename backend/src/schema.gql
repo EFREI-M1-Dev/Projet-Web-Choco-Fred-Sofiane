@@ -82,7 +82,7 @@ type Query {
   findOneById(id: Float!): User!
   healthCheck(id: String!): HealthCheck!
   message(id: Float!): Message!
-  profile: User!
+  profile: PickedUser!
 }
 
 """User"""

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import {AuthPayload, LoginInput} from "./Auth.model";
 import {PrismaService} from "../prisma.service";
 import * as bcrypt from 'bcrypt';
+import {User} from "../User/User.model";
 
 @Injectable()
 export class AuthService {
@@ -11,8 +12,8 @@ export class AuthService {
         private readonly prisma: PrismaService
     ) {}
 
-    async generateJwt(user: any) {
-        const payload = { username: user.username, sub: user.userId };
+    async generateJwt(user: User) {
+        const payload = { id: user.id, email: user.email };
         return {
             access_token: this.jwtService.sign(payload),
         };
@@ -44,5 +45,4 @@ export class AuthService {
             user: { id: user.id, username: user.username, email: user.email }
         };
     }
-
 }

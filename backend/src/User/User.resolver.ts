@@ -1,13 +1,15 @@
 import {Args, Context, Mutation, Query, Resolver} from '@nestjs/graphql';
 import {CreateUserInput, User} from './User.model';
-import { UserService } from './User.service';
+import {UserService} from './User.service';
 import {NotFoundException, UseGuards} from '@nestjs/common';
 import {Conversation} from "../Conversation/Conversation.model";
 import {JwtAuthGuard} from "../Auth/Jwt-auth.guard";
+import {PickedUser} from "../Auth/Auth.model";
 
 @Resolver(of => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) {
+    }
 
     @Query(returns => User)
     async findOneById(@Args('id') id: number): Promise<User> {
@@ -38,15 +40,22 @@ export class UserResolver {
         return this.userService.joinConversation(userId, conversationId);
     }
 
-    @Query(returns => User)
+    @Query(returns => PickedUser)
     @UseGuards(JwtAuthGuard)
-    async profile(@Context() context): Promise<User> {
-        const userId = context.req.user.userId;
+    async profile(@Context() context): Promise<PickedUser> {
+
+        const userId = context.req.user.id;
         const user = await this.userService.findOneById(userId);
+
         if (!user) {
             throw new NotFoundException(userId);
         }
-        return user;
+
+        return {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+        };
     }
 
 }
