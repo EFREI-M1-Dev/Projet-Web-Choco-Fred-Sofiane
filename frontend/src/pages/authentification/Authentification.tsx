@@ -6,6 +6,7 @@ import {useAuth} from "../../provider/AuthProvider";
 import {gql} from "../../types";
 import {useApolloClient, useMutation} from "@apollo/client";
 import {useNavigate} from "react-router";
+import Loader from "../../components/Loader/Loader";
 
 const REGISTER_MUTATION = gql(`
         mutation Register($data: CreateUserInput!) {
@@ -31,8 +32,12 @@ const AuthentificationPage = () => {
     const [registerMutation] = useMutation(REGISTER_MUTATION);
     const client = useApolloClient();
 
-    const {login, currentUser} = useAuth();
+    const {login, currentUser, loadingUser} = useAuth();
     const navigate = useNavigate();
+
+    if (loadingUser) {
+        return <Loader/>;
+    }
 
     const handleSubmit = async () => {
         try {

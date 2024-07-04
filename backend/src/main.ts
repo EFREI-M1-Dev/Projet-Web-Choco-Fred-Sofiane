@@ -11,6 +11,7 @@ async function bootstrap() {
         origin: allowedOrigins
     }));
 
+
     app.setGlobalPrefix('api');
 
     await app.listen(3000);

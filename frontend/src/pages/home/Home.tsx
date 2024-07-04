@@ -8,15 +8,16 @@ import {Navigate} from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 
 const Home = () => {
-    const {loggedIn, loadingUser} = useAuth();
+    const {loggedIn, loadingUser, currentUser} = useAuth();
 
     if (loadingUser) {
         return <Loader/>;
     }
 
-    if (!loggedIn) {
+    if (!loggedIn || !currentUser) {
         return <Navigate to="/"/>;
     }
+
 
     return (
         <div className={styles.containerHome}>
@@ -27,7 +28,7 @@ const Home = () => {
                     </div>
 
                     <div className={styles.welcomeMessage}>
-                        <h4>Bonjour Sofiane</h4>
+                        <h4>Bonjour {currentUser.username}</h4>
                         <p>Nous vous souhaitons une agréable journée.</p>
                     </div>
                 </div>
