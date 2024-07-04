@@ -34,15 +34,17 @@ export const MainControllerProvider: React.FC<{ children: ReactNode }> = ({child
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App/>,
-        errorElement: <ErrorPage/>,
+        element: <App />,
+        errorElement: <ErrorPage />,
         children: [
-            {index: true, element: <AuthentificationPage/>},
+            { index: true, element: <AuthentificationPage /> },
             {
                 path: '/home',
-                element: <HomePage/>
+                children: [
+                    { index: true, element: <HomePage /> },
+                ],
             },
-        ]
+        ],
     },
 ]);
 

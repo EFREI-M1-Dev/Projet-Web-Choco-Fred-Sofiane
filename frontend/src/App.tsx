@@ -1,10 +1,15 @@
-import { Outlet } from 'react-router-dom';
+import {Navigate, Outlet, useLocation} from 'react-router-dom';
+import {useAuth} from "./provider/AuthProvider";
 
 const App = () => {
+    const {pathname} = useLocation();
+    const { loggedIn } = useAuth();
 
-    return (
-        <Outlet/>
-    )
-}
+    if(loggedIn && pathname !== '/home') {
+        return <Navigate to="/home" />;
+    }
 
-export default App
+    return <Outlet />;
+};
+
+export default App;

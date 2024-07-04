@@ -11,3 +11,4 @@ export class AuthResolver {
         return this.authService.login(loginInput);
     }
 }
+

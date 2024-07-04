@@ -9,6 +9,7 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
     currentUser: PickedUser | null;
+    loadingUser: boolean;
 }
 
 interface AuthProviderProps {
@@ -44,12 +45,13 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     const [user, setUser] = useState<PickedUser | null>(null);
     const client = useApolloClient();
     const [loginMutation] = useMutation(LOGIN_MUTATION);
-    const {data: profileData} = useQuery(GET_PROFILE_QUERY, {
+    const {data: profileData, loading} = useQuery(GET_PROFILE_QUERY, {
         skip: !localStorage.getItem('token')  // Skip query if no token
     });
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        console.log('Token:', token,profileData);
         if (token && profileData && profileData.profile) {
             setUser(profileData.profile);
         }
@@ -79,7 +81,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     };
 
     return (
-        <AuthContext.Provider value={{loggedIn: !!user, login, logout, currentUser: user}}>
+        <AuthContext.Provider value={{loggedIn: !!user, login, logout, currentUser: user, loadingUser: loading}}>
             {children}
         </AuthContext.Provider>
     );

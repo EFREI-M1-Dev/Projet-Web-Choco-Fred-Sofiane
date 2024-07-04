@@ -5,6 +5,7 @@ import {Button} from "../../components/Button/Button";
 import {useAuth} from "../../provider/AuthProvider";
 import {gql} from "../../types";
 import {useApolloClient, useMutation} from "@apollo/client";
+import {useNavigate} from "react-router";
 
 const REGISTER_MUTATION = gql(`
         mutation Register($data: CreateUserInput!) {
@@ -31,6 +32,7 @@ const AuthentificationPage = () => {
     const client = useApolloClient();
 
     const {login, currentUser} = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
         try {
@@ -38,7 +40,15 @@ const AuthentificationPage = () => {
                 if (inputEmailValue === '' || inputPasswordValue === '') {
                     throw new Error('Veuillez remplir tous les champs');
                 }
-                await login(inputEmailValue, inputPasswordValue);
+                const ret = await login(inputEmailValue, inputPasswordValue);
+
+                if (!ret) {
+                    throw new Error('Email ou mot de passe incorrect');
+                }
+
+                await client.resetStore();
+                navigate('/home');
+
             } else {
                 if (inputEmailValue === '' || inputPasswordValue === '' || inputConfirmPasswordValue === '' || inputUsernameValue === '') {
                     throw new Error('Veuillez remplir tous les champs');

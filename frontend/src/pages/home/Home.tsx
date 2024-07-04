@@ -3,8 +3,20 @@ import logo from '../../assets/logo.svg';
 import PaperPlane from '../../assets/paper-plane.svg';
 
 import styles from './_Home.module.scss';
+import {useAuth} from "../../provider/AuthProvider";
+import {Navigate} from "react-router-dom";
+import Loader from "../../components/Loader/Loader";
 
 const Home = () => {
+    const {loggedIn, loadingUser} = useAuth();
+
+    if (loadingUser) {
+        return <Loader/>;
+    }
+
+    if (!loggedIn) {
+        return <Navigate to="/"/>;
+    }
 
     return (
         <div className={styles.containerHome}>
@@ -86,7 +98,8 @@ const Home = () => {
 
                 <div className={styles.footer}>
                     <input type="text" placeholder="Écrivez un message"/>
-                    <Button onClick={() => {}}>
+                    <Button onClick={() => {
+                    }}>
                         <img src={PaperPlane} alt="send"/>
                     </Button>
                 </div>
