@@ -1,7 +1,7 @@
 import {createContext, useState, ReactNode, useContext, useEffect} from 'react';
 import {useApolloClient, useMutation, useQuery} from '@apollo/client';
 import {PickedUser} from '../types/graphql';
-import {gql} from '@apollo/client';
+import {gql} from "../types";
 
 interface AuthContextType {
     loggedIn: boolean;
@@ -17,7 +17,7 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const LOGIN_MUTATION = gql`
+const LOGIN_MUTATION = gql(`
     mutation Login($email: String!, $password: String!) {
         login(data: { email: $email, password: $password }) {
             user {
@@ -29,18 +29,18 @@ const LOGIN_MUTATION = gql`
             refresh_token
         }
     }
-`;
+`);
 
-const REFRESH_TOKEN_MUTATION = gql`
+const REFRESH_TOKEN_MUTATION = gql(`
     mutation RefreshToken($refreshToken: String!) {
         refreshTokens(refreshToken: $refreshToken) {
             access_token
             refresh_token
         }
     }
-`;
+`);
 
-const GET_PROFILE_QUERY = gql`
+const GET_PROFILE_QUERY = gql(`
     query GetProfile {
         profile {
             id
@@ -48,7 +48,7 @@ const GET_PROFILE_QUERY = gql`
             email
         }
     }
-`;
+`);
 
 export const AuthProvider = ({children}: AuthProviderProps) => {
     const [user, setUser] = useState<PickedUser | null>(null);
