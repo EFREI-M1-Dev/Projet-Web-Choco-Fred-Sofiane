@@ -1,5 +1,4 @@
 import styles from './_Authentification.module.scss';
-import {TextField} from "../../components/TextField/TextField";
 import {useState} from "react";
 import {Button} from "../../components/Button/Button";
 import presentation from '../../assets/home-presentation.avif';
@@ -32,7 +31,7 @@ const AuthentificationPage = () => {
     const [registerMutation] = useMutation(REGISTER_MUTATION);
     const client = useApolloClient();
 
-    const {login, currentUser, loadingUser} = useAuth();
+    const {login, loadingUser} = useAuth();
     const navigate = useNavigate();
 
     if (loadingUser) {
@@ -127,7 +126,7 @@ const AuthentificationPage = () => {
                                     </div>
                                 </div>
 
-                                <Button type="button" className={styles.buttonPrimary} onClick={handleSubmit}>
+                                <Button className={styles.buttonPrimary} onClick={handleSubmit}>
                                     Se connecter
                                 </Button>
                             </form>
@@ -185,7 +184,7 @@ const AuthentificationPage = () => {
                                     </div>
                                 </div>
 
-                                <Button type="button" className={styles.buttonPrimary} onClick={handleSubmit}>
+                                <Button className={styles.buttonPrimary} onClick={handleSubmit}>
                                     S'inscrire
                                 </Button>
                             </form>
