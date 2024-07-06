@@ -1,8 +1,8 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
 import { Conversation } from './Conversation.model';
-import { ConversationService } from './Conversation.service';
+import {ConversationService} from './Conversation.service';
 import {NotFoundException} from '@nestjs/common';
-import { Message } from '../Message/Message.model';
+import {MessageWithUser} from "../Message/Message.model";
 
 @Resolver(of => Conversation)
 export class ConversationResolver {
@@ -17,8 +17,8 @@ export class ConversationResolver {
         return user;
     }
 
-    @Query(returns => [Message])
-    async findMessagesByConversationId(@Args('id') id: number): Promise<Message[]> {
+    @Query(returns => [MessageWithUser])
+    async findMessagesByConversationId(@Args('id') id: number): Promise<MessageWithUser[]> {
         return this.conversationService.findMessagesByConversationId(id);
     }
 

@@ -51,9 +51,21 @@ type Message {
   content: String!
   conversationId: Float!
   createdAt: DateTime!
-  deletedAt: DateTime!
+  deletedAt: DateTime
   id: ID!
   updatedAt: DateTime!
+  userId: Float!
+}
+
+"""Message with user"""
+type MessageWithUser {
+  content: String!
+  conversationId: Float!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: ID!
+  updatedAt: DateTime!
+  user: User
   userId: Float!
 }
 
@@ -80,7 +92,7 @@ type PickedUser {
 type Query {
   conversation(id: Float!): Conversation!
   findConversations(id: Float!): [Conversation!]!
-  findMessagesByConversationId(id: Float!): [Message!]!
+  findMessagesByConversationId(id: Float!): [MessageWithUser!]!
   findOneById(id: Float!): User!
   healthCheck(id: String!): HealthCheck!
   message(id: Float!): Message!

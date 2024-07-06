@@ -11,14 +11,31 @@ import { useEffect, useState } from "react";
 import { Conversation } from "../../types/graphql";
 
 const FIND_CONVERSATIONS = gql(`
-    query FindConversations($id: Float!) {
-        findConversations(id: $id) {
-            id
-            name
-            createdAt
-            updatedAt
-        }
+  query FindConversations($id: Float!) {
+    findConversations(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
     }
+  }
+`);
+
+const FIND_MESSAGES_BY_CONVERSATION_ID = gql(`
+  query FindMessagesByConversationId($id: Float!) {
+    findMessagesByConversationId(id: $id) {
+      id
+      content
+      createdAt
+      updatedAt
+      conversationId
+      userId
+      deletedAt
+      user {
+        username
+      }
+    }
+  }
 `);
 
 const ADD_MESSAGE = gql(`
@@ -32,9 +49,14 @@ const Home = () => {
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
     const [messageContent, setMessageContent] = useState("");
 
-    const { loading, data: conversationsData } = useQuery(FIND_CONVERSATIONS, {
+    const { loading: loadingConversations, data: conversationsData } = useQuery(FIND_CONVERSATIONS, {
         variables: { id: currentUser?.id ?? 0 }, // Ensure we always have a valid id
         skip: !currentUser // Skip the query if currentUser is not available
+    });
+
+    const { loading: loadingMessages, data: messagesData, refetch: refetchMessages } = useQuery(FIND_MESSAGES_BY_CONVERSATION_ID, {
+        variables: { id: Number(currentConversation?.id ?? 0) },
+        skip: !currentConversation // Skip the query if no conversation is selected
     });
 
     const [addMessageJob] = useMutation(ADD_MESSAGE);
@@ -45,7 +67,17 @@ const Home = () => {
         }
     }, [conversationsData]);
 
-    if (loadingUser || loading) {
+    useEffect(() => {
+        if (currentConversation) {
+            refetchMessages().then(() => {
+                // Scroll to the bottom of the messages list
+                const messagesList = document.querySelector(`.${styles.messagesList}`);
+                messagesList?.scrollTo(0, messagesList.scrollHeight);
+            })
+        }
+    }, [currentConversation, refetchMessages]);
+
+    if (loadingUser || loadingConversations) {
         return <Loader />;
     }
 
@@ -67,7 +99,11 @@ const Home = () => {
                 }
             });
             setMessageContent("");
-            // Optionally, refetch conversations or update the state to include the new message
+            refetchMessages().then(() => {
+                // Scroll to the bottom of the messages list
+                const messagesList = document.querySelector(`.${styles.messagesList}`);
+                messagesList?.scrollTo(0, messagesList.scrollHeight);
+            });
         } catch (error) {
             console.error("Error sending message:", error);
         }
@@ -135,19 +171,25 @@ const Home = () => {
                 </div>
                 <div className={styles.messagesWrapper}>
                     <div className={styles.messagesList}>
-                        <div className={styles.messageWrapper}>
-                            <div className={styles.message}>
-                                <div className={styles.name}>
-                                    Dorian
-                                </div>
-                                <div>
-                                    <p>Ceci est un message d'exemple</p>
-                                    <div className={styles.time}>
-                                        10H54
+                        {loadingMessages ? (
+                            <Loader />
+                        ) : (
+                            messagesData && messagesData.findMessagesByConversationId.map((message) => (
+                                <div key={message.id} className={styles.messageWrapper}>
+                                    <div className={styles.message}>
+                                        <div className={styles.name}>
+                                            {message.user && message.user.username}
+                                        </div>
+                                        <div>
+                                            <p>{message.content}</p>
+                                            <div className={styles.time}>
+                                                {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            ))
+                        )}
                     </div>
                 </div>
                 <div className={styles.footer}>
