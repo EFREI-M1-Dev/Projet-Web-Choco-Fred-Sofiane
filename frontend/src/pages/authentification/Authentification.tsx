@@ -2,6 +2,8 @@ import styles from './_Authentification.module.scss';
 import {TextField} from "../../components/TextField/TextField";
 import {useState} from "react";
 import {Button} from "../../components/Button/Button";
+import presentation from '../../assets/home-presentation.avif';
+import logo from '../../assets/logo.svg';
 import {useAuth} from "../../provider/AuthProvider";
 import {gql} from "../../types";
 import {useApolloClient, useMutation} from "@apollo/client";
@@ -19,9 +21,7 @@ const REGISTER_MUTATION = gql(`
         }
     `);
 
-
 const AuthentificationPage = () => {
-
     const [isLogin, setIsLogin] = useState<boolean>(true);
 
     const [inputEmailValue, setInputEmailValue] = useState<string>('');
@@ -73,8 +73,7 @@ const AuthentificationPage = () => {
                 if (!data) throw new Error('No data');
                 await client.resetStore();
             }
-        } catch
-            (e) {
+        } catch (e) {
             if (e instanceof Error)
                 alert(e.message);
         }
@@ -89,82 +88,120 @@ const AuthentificationPage = () => {
     }
 
     return (
-        <div className={styles.containerAuth}>
-
-            {currentUser && <h1>Bonjour {currentUser.username}</h1>}
-
-            {isLogin ?
-                <div className={styles.containerForm}>
-                    <h1>Connexion</h1>
-                    <TextField
-                        value={inputEmailValue}
-                        placeholder={"Email"}
-                        type="text"
-                        onChange={(event) => setInputEmailValue(event.target.value)}
-                    />
-                    <TextField
-                        value={inputPasswordValue}
-                        placeholder={"Password"}
-                        type="password"
-                        onChange={(event) => setInputPasswordValue(event.target.value)}
-                    />
-                    <Button
-                        className={styles.button}
-                        onClick={handleSubmit}
-                    >
-                        Login
-                    </Button>
+        <div className={styles.loginForm}>
+            <div className={styles.flexContainer}>
+                <div className={styles.phonePresentation}>
+                    <img src={presentation} alt="phone-presentation"/>
                 </div>
-                :
-                <div className={styles.containerForm}>
-                    <h1>Inscription</h1>
+                <div className={styles.rightPart}>
+                    {isLogin ?
+                        <div id="loginForm">
+                            <div className={styles.logo}>
+                                <img src={logo} alt="logo"/>
+                            </div>
+                            <form className={styles.form} data-form-type="login">
+                                <h4>Connexion</h4>
+                                <div id="loginError" className={`${styles.alert} ${styles.alertDanger} ${styles.hidden}`}>
+                                    Erreur lors de la connexion
+                                </div>
+                                <div id="registerSuccess" className={`${styles.alert} ${styles.alertSuccess} ${styles.hidden}`}>
+                                    Compte créé avec succès, vous pouvez vous connecter
+                                </div>
 
-                    <TextField
-                        value={inputUsernameValue}
-                        placeholder={"Username"}
-                        type="text"
-                        onChange={(event) => setInputUsernameValue(event.target.value)}
-                    />
+                                <div className={styles.marginY}>
+                                    <div className={styles.formFloating}>
+                                        <input type="email" className={styles.formControl} id="loginEmailInput"
+                                               placeholder="gordon.freeman@blackmesa.us" required
+                                               value={inputEmailValue}
+                                               onChange={(e) => setInputEmailValue(e.target.value)}
+                                        />
+                                        <label htmlFor="loginEmailInput">Adresse e-mail</label>
+                                    </div>
+                                    <div className={styles.formFloating}>
+                                        <input type="password" className={styles.formControl} id="loginPasswordInput"
+                                               placeholder="Mot de passe" required
+                                               value={inputPasswordValue}
+                                               onChange={(e) => setInputPasswordValue(e.target.value)}
+                                        />
+                                        <label htmlFor="loginPasswordInput">Mot de passe</label>
+                                    </div>
+                                </div>
 
-                    <TextField
-                        value={inputEmailValue}
-                        placeholder={"Email"}
-                        type="text"
-                        onChange={(event) => setInputEmailValue(event.target.value)}
-                    />
-                    <TextField
-                        value={inputPasswordValue}
-                        placeholder={"Password"}
-                        type="password"
-                        onChange={(event) => setInputPasswordValue(event.target.value)}
-                    />
+                                <Button type="button" className={styles.buttonPrimary} onClick={handleSubmit}>
+                                    Se connecter
+                                </Button>
+                            </form>
 
-                    <TextField
-                        value={inputConfirmPasswordValue}
-                        placeholder={"Confirm Password"}
-                        type="password"
-                        onChange={(event) => setInputConfirmPasswordValue(event.target.value)}
-                    />
+                            <div className={styles.form}>
+                                <span>Vous n'avez pas de compte ? <a id="showRegisterFormLink" href="#"
+                                                                     className={styles.boldText}
+                                                                     onClick={toggleForm}>Inscrivez-vous</a></span>
+                            </div>
+                        </div>
+                        :
+                        <div id="registerForm">
+                            <div className={styles.logo}>
+                                <img src={logo} alt="logo"/>
+                            </div>
+                            <form className={styles.form} data-form-type="register">
+                                <h4>Créer un compte</h4>
+                                <div id="registerError" className={`${styles.alert} ${styles.alertDanger} ${styles.hidden}`}>
+                                    Erreur lors de la création du compte
+                                </div>
 
-                    <Button
-                        className={styles.button}
-                        onClick={handleSubmit}
-                    >
-                        Register
-                    </Button>
+                                <div className={styles.marginY}>
+                                    <div className={styles.marginBottom}>
+                                        <label htmlFor="registerEmailInput" className={styles.formLabel}>Adresse
+                                            e-mail</label>
+                                        <input type="email" className={styles.formControl} id="registerEmailInput"
+                                               placeholder="gordon.freeman@blackmesa.us" required
+                                               value={inputEmailValue}
+                                               onChange={(e) => setInputEmailValue(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className={styles.marginBottom}>
+                                        <label htmlFor="registerPasswordInput" className={styles.formLabel}>Mot de
+                                            passe</label>
+                                        <input type="password" className={`${styles.formControl} ${styles.marginBottom}`} id="registerPasswordInput"
+                                               placeholder="Mot de passe" required
+                                               value={inputPasswordValue}
+                                               onChange={(e) => setInputPasswordValue(e.target.value)}
+                                        />
+                                        <input type="password" className={styles.formControl}
+                                               id="registerPasswordConfirmInput"
+                                               placeholder="Confirmer le mot de passe" required
+                                               value={inputConfirmPasswordValue}
+                                               onChange={(e) => setInputConfirmPasswordValue(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className={styles.marginBottom}>
+                                        <label htmlFor="registerNameInput" className={styles.formLabel}>Nom
+                                            d'utilisateur</label>
+                                        <input type="text" className={styles.formControl} id="registerNameInput"
+                                               placeholder="Gordon Freeman" required
+                                               value={inputUsernameValue}
+                                               onChange={(e) => setInputUsernameValue(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <Button type="button" className={styles.buttonPrimary} onClick={handleSubmit}>
+                                    S'inscrire
+                                </Button>
+                            </form>
+
+                            <div className={styles.form}>
+                                <span>Vous possédez déjà un compte ?</span>
+                                <a id="showLoginFormLink" href="#" className={styles.boldText} onClick={toggleForm}>
+                                    Connectez-vous
+                                </a>
+                            </div>
+                        </div>
+                    }
                 </div>
-            }
-            <div className={styles.containerSwitch}>
-                <Button
-                    className={styles.button}
-                    onClick={toggleForm}
-                >
-                    {isLogin ? "Pas encore de compte ?" : "Déjà un compte ?"}
-                </Button>
             </div>
-
         </div>
     )
 }
 
-export default AuthentificationPage
+export default AuthentificationPage;
