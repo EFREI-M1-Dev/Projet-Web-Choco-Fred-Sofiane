@@ -5,7 +5,7 @@
 """Input type for creating a new message"""
 input AddMessageJobInput {
   content: String!
-  conversationId: Float!
+  conversationId: ID!
   userId: Float!
 }
 

@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { Navigate } from 'react-router-dom';
 import Loader from "../../components/Loader/Loader";
 import { useAuth } from "../../provider/AuthProvider";
@@ -21,14 +21,23 @@ const FIND_CONVERSATIONS = gql(`
     }
 `);
 
+const ADD_MESSAGE = gql(`
+  mutation AddMessageJob($data: AddMessageJobInput!) {
+    addMessageJob(data: $data)
+  }
+`);
+
 const Home = () => {
     const { loggedIn, loadingUser, currentUser } = useAuth();
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
+    const [messageContent, setMessageContent] = useState("");
 
     const { loading, data: conversationsData } = useQuery(FIND_CONVERSATIONS, {
         variables: { id: currentUser?.id ?? 0 }, // Ensure we always have a valid id
         skip: !currentUser // Skip the query if currentUser is not available
     });
+
+    const [addMessageJob] = useMutation(ADD_MESSAGE);
 
     useEffect(() => {
         if (conversationsData && conversationsData.findConversations.length > 0) {
@@ -43,6 +52,26 @@ const Home = () => {
     if (!loggedIn || !currentUser) {
         return <Navigate to="/" />;
     }
+
+    const handleSendMessage = async () => {
+        if (!messageContent.trim() || !currentConversation) return;
+
+        try {
+            await addMessageJob({
+                variables: {
+                    data: {
+                        conversationId: currentConversation.id,
+                        userId: currentUser.id,
+                        content: messageContent
+                    }
+                }
+            });
+            setMessageContent("");
+            // Optionally, refetch conversations or update the state to include the new message
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
+    };
 
     return (
         <div className={styles.containerHome}>
@@ -122,8 +151,13 @@ const Home = () => {
                     </div>
                 </div>
                 <div className={styles.footer}>
-                    <input type="text" placeholder="Écrivez un message" />
-                    <Button onClick={() => {}}>
+                    <input
+                        type="text"
+                        placeholder="Écrivez un message"
+                        value={messageContent}
+                        onChange={(e) => setMessageContent(e.target.value)}
+                    />
+                    <Button onClick={handleSendMessage}>
                         <img src={PaperPlane} alt="send" />
                     </Button>
                 </div>

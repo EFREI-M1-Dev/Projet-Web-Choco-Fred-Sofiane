@@ -11,20 +11,30 @@ export class MessageService {
     private prisma: PrismaService,
   ) {}
 
-  async addMessageJob(data : AddMessageJobInput): Promise<string> {
-    const now: Date = new Date();
-    const job = await this.messageQueue.add('message-job', {
-      conversationId: data.conversationId,
-      userId: data.userId,
-      content: data.content,
-      createdAt: now,
-      updatedAt: now,
-      deletedAt: null,
-    });
-    console.log(`Message job added with id: ${job.id}`);
-
-    return job.id;
+  async onModuleInit() {
+    console.log('MessageService initialized, starting workers...');
+    await this.messageQueue.obliterate({ force: true }); // Clear previous jobs if needed
   }
+
+  async addMessageJob(data: AddMessageJobInput): Promise<string> {
+    const now: Date = new Date();
+    try {
+      const job = await this.messageQueue.add('message-job', {
+        conversationId: Number(data.conversationId),
+        userId: Number(data.userId),
+        content: data.content,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+      });
+      console.log(`Message job added with id: ${job.id}`);
+      return job.id;
+    } catch (error) {
+      console.error('Failed to add message job', error);
+      throw error;
+    }
+  }
+
 
   async findOneById(id: number): Promise<Message> | null {
     const message = await this.prisma.message.findUnique({

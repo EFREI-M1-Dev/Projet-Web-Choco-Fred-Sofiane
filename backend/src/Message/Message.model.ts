@@ -2,7 +2,7 @@ import {Field, ID, InputType, ObjectType} from '@nestjs/graphql';
 
 @InputType({ description: 'Input type for creating a new message' })
 export class AddMessageJobInput {
-  @Field()
+  @Field((type) => ID)
   conversationId: number;
 
   @Field()

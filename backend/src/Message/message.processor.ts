@@ -1,6 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { PrismaService } from '../prisma.service';
+import {Conversation} from "../Conversation/Conversation.model";
 
 @Processor('message-queue')
 export class MessageProcessor extends WorkerHost {
@@ -9,19 +10,23 @@ export class MessageProcessor extends WorkerHost {
     }
 
     async process(job: Job<any>): Promise<void> {
+        console.log(`Processing message job with id: ${job.id}`);
         const { conversationId, userId, content, createdAt, updatedAt } = job.data;
 
-        await this.prisma.message.create({
-            data: {
-                conversationId,
-                userId,
-                content,
-                createdAt,
-                updatedAt,
-                deletedAt: null,
-            },
-        });
-
-        console.log(`Message saved with id: ${job.id}`);
+        try {
+            await this.prisma.message.create({
+                data: {
+                    conversationId,
+                    userId,
+                    content,
+                    createdAt,
+                    updatedAt,
+                    deletedAt: null,
+                },
+            });
+            console.log(`Message saved with id: ${job.id}`);
+        } catch (error) {
+            console.error(`Failed to save message with id: ${job.id}`, error);
+        }
     }
 }
