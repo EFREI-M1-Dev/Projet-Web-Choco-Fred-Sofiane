@@ -9,6 +9,8 @@ import PaperPlane from '../../assets/paper-plane.svg';
 import { gql } from "../../types";
 import { useEffect, useState } from "react";
 import { Conversation } from "../../types/graphql";
+import {formatTimestamp} from "../../utils/formatTimestamp";
+import {Message} from "../../components/Message/Message";
 
 const FIND_CONVERSATIONS = gql(`
   query FindConversations($id: Float!) {
@@ -59,7 +61,14 @@ const Home = () => {
         skip: !currentConversation // Skip the query if no conversation is selected
     });
 
-    const [addMessageJob] = useMutation(ADD_MESSAGE);
+    const [addMessageJob] = useMutation(ADD_MESSAGE, {
+        onCompleted: () => {
+            console.log("Message sent successfully");
+        },
+        onError: (error) => {
+            console.error("Error sending message:", error);
+        }
+    });
 
     useEffect(() => {
         if (conversationsData && conversationsData.findConversations.length > 0) {
@@ -164,7 +173,11 @@ const Home = () => {
                                 </div>
                             </div>
                             <div className={styles.message}>
-                                Dernier message aujourd’hui à 9H45
+                                {messagesData && messagesData.findMessagesByConversationId.length > 0 ? (
+                                    <span>Dernier message {formatTimestamp(new Date(messagesData.findMessagesByConversationId[messagesData.findMessagesByConversationId.length - 1].createdAt).getTime())}</span>
+                                ) : (
+                                    <span>Pas de message</span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -175,19 +188,28 @@ const Home = () => {
                             <Loader />
                         ) : (
                             messagesData && messagesData.findMessagesByConversationId.map((message) => (
-                                <div key={message.id} className={styles.messageWrapper}>
-                                    <div className={styles.message}>
-                                        <div className={styles.name}>
-                                            {message.user && message.user.username}
-                                        </div>
-                                        <div>
-                                            <p>{message.content}</p>
-                                            <div className={styles.time}>
-                                                {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                // <div  className={styles.messageWrapper}>
+                                //     <div className={styles.message}>
+                                //         <div className={styles.name}>
+                                //             {message.user && message.user.username}
+                                //         </div>
+                                //         <div>
+                                //             <p>{message.content}</p>
+                                //             <div className={styles.time}>
+                                //                 {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                //             </div>
+                                //         </div>
+                                //     </div>
+                                // </div>
+
+                                <Message
+                                    key={message.id}
+                                    content={message.content}
+                                    createdAt={new Date(message.createdAt)}
+                                    myMessage
+                                    username={message.user ? message.user.username : ''}
+                                />
+
                             ))
                         )}
                     </div>
