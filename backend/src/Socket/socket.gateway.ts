@@ -1,7 +1,7 @@
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1'];
+export const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1', 'http://localhost:4173'];
 
 @WebSocketGateway({
     cors: {
