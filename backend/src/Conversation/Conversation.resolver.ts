@@ -12,11 +12,11 @@ export class ConversationResolver {
     @Query(returns => Conversation)
     @UseGuards(JwtAuthGuard)
     async conversation(@Args('id') id: number): Promise<Conversation> {
-        const user = await this.conversationService.findOneById(id);
-        if (!user) {
+        const conversation = await this.conversationService.findOneById(id);
+        if (!conversation) {
             throw new NotFoundException(id);
         }
-        return user;
+        return conversation;
     }
 
     @Query(returns => [MessageWithUser])

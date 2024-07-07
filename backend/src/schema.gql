@@ -78,7 +78,7 @@ type Mutation {
   deleteMessage(id: Float!): Message!
   deleteUser(id: Float!): User!
   editMessageContent(content: String!, id: Float!): Message!
-  joinConversation(conversationId: Float!, userId: Float!): User!
+  joinConversation(conversationId: Float!): Conversation!
   login(data: LoginInput!): AuthPayload!
   refreshTokens(refreshToken: String!): AuthPayload!
   updateConversation(id: Float!, name: String!): Conversation!

@@ -5,8 +5,9 @@ const App = () => {
     const {pathname} = useLocation();
     const { loggedIn } = useAuth();
 
-    if(loggedIn && pathname !== '/home') {
-        return <Navigate to="/home" />;
+    if(loggedIn && !pathname.startsWith('/home')) {
+        const query = new URLSearchParams(window.location.search);
+        return <Navigate to={`/home?${query}`} />;
     }
 
     return <Outlet />;

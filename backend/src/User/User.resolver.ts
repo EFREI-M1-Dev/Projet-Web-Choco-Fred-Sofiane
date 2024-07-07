@@ -38,11 +38,13 @@ export class UserResolver {
         return this.userService.deleteUser(id);
     }
 
-    @Mutation(returns => User)
+    @Mutation(returns => Conversation)
     @UseGuards(JwtAuthGuard)
-    async joinConversation(@Args('userId') userId: number, @Args('conversationId') conversationId: number): Promise<User> {
+    async joinConversation(@Context() context, @Args('conversationId') conversationId: number): Promise<Conversation> {
+        const userId = context.req.user.id;
         return this.userService.joinConversation(userId, conversationId);
     }
+
 
     @Query(returns => PickedUser)
     @UseGuards(JwtAuthGuard)

@@ -112,56 +112,50 @@ export class UserService {
         return user.conversations;
     }
 
-    async joinConversation(userId: number, conversationId: number): Promise<User> {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id: userId,
-            },
-            include: {
-                conversations: true,
-            },
-        });
+    async joinConversation(userId: number, conversationId: number): Promise<Conversation> {
 
-        if (!user) {
-            throw new Error('User not found');
-        }
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userId,
+                },
+                include: {
+                    conversations: true,
+                },
+            });
 
-        const conversation = await this.prisma.conversation.findUnique({
-            where: {
-                id: conversationId,
-            },
-        });
+            if (!user) {
+                throw new Error('User not found');
+            }
 
-        if (!conversation) {
-            throw new Error('Conversation not found');
-        }
+            const conversation = await this.prisma.conversation.findUnique({
+                where: {
+                    id: conversationId,
+                },
+            });
 
-        const updatedUser = await this.prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                conversations: {
-                    connect: {
-                        id: conversationId,
+            if (!conversation) {
+                throw new Error('Conversation not found');
+            }
+
+            await this.prisma.user.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    conversations: {
+                        connect: {
+                            id: conversationId,
+                        },
                     },
                 },
-            },
-            include: {conversations: true},
-        });
+                include: {conversations: true},
+            });
 
-        if (!updatedUser) {
-            throw new Error('User not updated');
-        }
-
-        return {
-            id: updatedUser.id,
-            email: updatedUser.email,
-            username: updatedUser.username,
-            password: updatedUser.password,
-            createdAt: updatedUser.createdAt,
-            updatedAt: updatedUser.updatedAt,
-            conversations: updatedUser.conversations
+            return conversation;
+        } catch (error) {
+            console.error('joinConversation: Error joining conversation', error);
+            throw new Error('Error joining conversation');
         }
     };
 

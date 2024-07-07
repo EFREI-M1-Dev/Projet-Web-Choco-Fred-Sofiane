@@ -28,6 +28,18 @@ const FIND_CONVERSATIONS = gql(`
     }
   }
 `);
+const FIND_CONVERSATION_BY_ID = gql(`
+  query FindConversationById($id: Float!) {
+    conversation(id: $id) {
+      id
+      name
+      createdAt
+      updatedAt
+      ownerId
+    }
+  }
+`);
+
 
 const FIND_MESSAGES_BY_CONVERSATION_ID = gql(`
   query FindMessagesByConversationId($id: Float!) {
@@ -64,7 +76,6 @@ const CREATE_CONVERSATION = gql(`
     }
 `);
 
-
 const DELETE_CONVERSATION = gql(`
     mutation DeleteConversation($id: Float!) {
         deleteConversation(id: $id) {
@@ -74,6 +85,17 @@ const DELETE_CONVERSATION = gql(`
     }
 `);
 
+const JOIN_CONVERSATION = gql(`
+    mutation JoinConversation($conversationId: Float!) {
+        joinConversation(conversationId: $conversationId) {
+            id
+            name
+            createdAt
+            updatedAt
+            ownerId
+        }
+    }
+`);
 
 const Home = () => {
     const {loggedIn, loadingUser, currentUser} = useAuth();
@@ -83,15 +105,29 @@ const Home = () => {
     const [messageContent, setMessageContent] = useState("");
 
     const [modalAddDiscussion_isOpen, setModalAddDiscussion_isOpen] = useState(false);
+    const [modalJoinDiscussion_isOpen, setModalJoinDiscussion_isOpen] = useState(false);
     const [inputDiscussionName, setInputDiscussionName] = useState("");
+    const [conversationIdToJoin, setConversationIdToJoin] = useState<number | null>(null);
 
     const {
         loading: loadingConversations,
         data: conversationsData,
         refetch: refetchConversations
     } = useQuery(FIND_CONVERSATIONS, {
-        variables: {id: currentUser?.id ?? 0}, // Ensure we always have a valid id
-        skip: !currentUser // Skip the query if currentUser is not available
+        variables: {id: currentUser?.id ?? 0},
+        skip: !currentUser
+    });
+
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const conversationId = urlParams.get('conversationId');
+
+    const {
+        loading: loadingConversation,
+        data: conversationData,
+    } = useQuery(FIND_CONVERSATION_BY_ID, {
+        variables: {id: Number(conversationId)},
+        skip: !conversationId
     });
 
     const {
@@ -100,7 +136,7 @@ const Home = () => {
         refetch: refetchMessages
     } = useQuery(FIND_MESSAGES_BY_CONVERSATION_ID, {
         variables: {id: Number(currentConversation?.id ?? 0)},
-        skip: !currentConversation // Skip the query if no conversation is selected
+        skip: !currentConversation
     });
 
     const [addMessageJob] = useMutation(ADD_MESSAGE, {
@@ -127,8 +163,7 @@ const Home = () => {
         onCompleted: (data) => {
             console.log(`Conversation ${data.deleteConversation.name} deleted successfully`);
             refetchConversations().then(() => {
-                if(conversationsData && conversationsData.findConversations.length > 0)
-                {
+                if (conversationsData && conversationsData.findConversations.length > 0) {
                     setCurrentConversation(conversationsData.findConversations[0]);
                 } else {
                     setCurrentConversation(null);
@@ -139,6 +174,35 @@ const Home = () => {
             console.error("Error deleting conversation:", error);
         }
     });
+
+    const [joinConversation] = useMutation(JOIN_CONVERSATION, {
+        onCompleted: (data) => {
+            refetchConversations().then(() => {
+                setCurrentConversation(data.joinConversation);
+                setModalJoinDiscussion_isOpen(false);
+            });
+        },
+        onError: (error) => {
+            console.error("Error joining conversation:", error);
+        }
+    });
+
+    useEffect(() => {
+        if (conversationId) {
+            console.log("Conversation ID:", conversationId,conversationData,loadingConversation, loadingConversations);
+            if (conversationData && !loadingConversation && !loadingConversations) {
+                const conversation = conversationData.conversation;
+                const alreadyJoined = conversationsData && conversationsData.findConversations.find(conversation => conversation.id === conversationId);
+                console.log("Already joined:", alreadyJoined);
+                if (conversation && alreadyJoined === undefined) {
+                    setConversationIdToJoin(Number(conversationId));
+                    setModalJoinDiscussion_isOpen(true);
+                    setCurrentConversation(conversation);
+                }
+            }
+        }
+    }, [loadingConversation,loadingConversations]);
+
 
     useEffect(() => {
         if (conversationsData && conversationsData.findConversations.length > 0) {
@@ -194,12 +258,13 @@ const Home = () => {
         };
     }, [currentConversation, refetchMessages]);
 
-    if (loadingUser || loadingConversations) {
+    if (loadingUser || loadingConversations || loadingConversation) {
         return <Loader/>;
     }
 
     if (!loggedIn || !currentUser) {
-        return <Navigate to="/"/>;
+        const query = new URLSearchParams(window.location.search);
+        return <Navigate to={`/?${query}`}/>;
     }
 
     const handleSendMessage = async () => {
@@ -225,7 +290,6 @@ const Home = () => {
             console.error("Error sending message:", error);
         }
     };
-
     return (
         <div
             className={styles.containerHome}
@@ -344,7 +408,10 @@ const Home = () => {
                                 }
                                 <Button
                                     onClick={() => {
-                                        navigator.clipboard.writeText(window.location.href).then(() => console.log("Copied to clipboard"));
+                                        const baseUrl = window.location.origin + window.location.pathname;
+                                        const newUrl = `${baseUrl}?conversationId=${currentConversation.id}`;
+                                        navigator.clipboard.writeText(newUrl)
+                                            .then(() => console.log("Copied to clipboard"));
                                     }}
                                 > Partager le lien </Button>
                             </div>
@@ -383,31 +450,60 @@ const Home = () => {
 
             <Modal
                 title={"Nouvelle discussion"}
-                actionButton={
-                    {
-                        buttons: "YES_CANCEL",
-                        onAction: (action) => {
-                            if (action === ModalAction.YES) {
-                                if (inputDiscussionName.trim() === "") return;
-                                addConversation({
-                                    variables: {
-                                        conversationName: inputDiscussionName
-                                    }
-                                }).then(() => {
-                                    setModalAddDiscussion_isOpen(false);
-                                    setInputDiscussionName("");
-                                }).catch((error) => {
-                                    console.error("Error creating conversation:", error);
-                                });
-                            } else {
+                actionButton={{
+                    buttons: "YES_CANCEL",
+                    onAction: (action) => {
+                        if (action === ModalAction.YES) {
+                            if (inputDiscussionName.trim() === "") return;
+                            addConversation({
+                                variables: {
+                                    conversationName: inputDiscussionName
+                                }
+                            }).then(() => {
                                 setModalAddDiscussion_isOpen(false);
-                            }
+                                setInputDiscussionName("");
+                            }).catch((error) => {
+                                console.error("Error creating conversation:", error);
+                            });
+                        } else {
+                            setModalAddDiscussion_isOpen(false);
                         }
-                    }}
+                    }
+                }}
                 isOpen={modalAddDiscussion_isOpen}
             >
-                <TextField type={"text"} value={inputDiscussionName}
-                           onChange={(e) => setInputDiscussionName(e.target.value)}/>
+                <TextField
+                    type={"text"}
+                    value={inputDiscussionName}
+                    onChange={(e) => setInputDiscussionName(e.target.value)}/>
+            </Modal>
+
+            <Modal
+                title={"Rejoindre la discussion"}
+                actionButton={{
+                    buttons: "YES_CANCEL",
+                    onAction: (action) => {
+                        if (action === ModalAction.YES) {
+                            if (conversationIdToJoin) {
+                                joinConversation({
+                                    variables: {
+                                        conversationId: conversationIdToJoin
+                                    }
+                                }).then(() => {
+                                    setModalJoinDiscussion_isOpen(false);
+                                }).catch((error) => {
+                                    console.error("Error joining conversation:", error);
+                                });
+                            }
+                        } else {
+                            setModalJoinDiscussion_isOpen(false);
+                        }
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                }}
+                isOpen={modalJoinDiscussion_isOpen}
+            >
+                <p>Voulez-vous rejoindre cette discussion ?</p>
             </Modal>
         </div>
     );
