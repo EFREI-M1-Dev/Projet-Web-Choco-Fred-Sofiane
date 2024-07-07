@@ -20,6 +20,7 @@ type Conversation {
   createdAt: DateTime!
   id: ID!
   name: String!
+  ownerId: Float!
   updatedAt: DateTime!
 }
 

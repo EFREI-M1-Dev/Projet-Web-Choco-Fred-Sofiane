@@ -14,7 +14,12 @@ export class ConversationService {
     async addConversation(name: string, user: User): Promise<Conversation> {
         const conversation = await this.prisma.conversation.create({
             data: {
-                name: name
+                name: name,
+                owner: {
+                    connect: {
+                        id: user.id,
+                    },
+                }
             },
         });
 
@@ -51,8 +56,8 @@ export class ConversationService {
         return conversation;
     }
 
-    async deleteConversation(id: number): Promise<void> {
-        await this.prisma.conversation.delete({
+    async deleteConversation(id: number): Promise<Conversation> {
+        return this.prisma.conversation.delete({
             where: {id: id},
         });
     }

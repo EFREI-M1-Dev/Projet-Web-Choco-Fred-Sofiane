@@ -109,14 +109,7 @@ export class UserService {
             return [];
         }
 
-        return user.conversations.map((conversation) => {
-            return {
-                id: conversation.id,
-                name: conversation.name,
-                createdAt: conversation.createdAt,
-                updatedAt: conversation.updatedAt
-            };
-        });
+        return user.conversations;
     }
 
     async joinConversation(userId: number, conversationId: number): Promise<User> {

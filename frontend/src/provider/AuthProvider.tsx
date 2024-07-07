@@ -117,7 +117,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 refreshAccessToken(refreshToken)
                     .then(() => console.log('Token refreshed'))
                     .catch(logout);
-            }, 14 * 60 * 1000); // Refresh token every 14 minutes
+            }, 10 * 60 * 1000); // Refresh token every 14 minutes
 
             return () => clearInterval(intervalId);
         }

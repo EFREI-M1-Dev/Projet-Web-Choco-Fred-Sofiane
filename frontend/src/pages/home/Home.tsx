@@ -24,6 +24,7 @@ const FIND_CONVERSATIONS = gql(`
       name
       createdAt
       updatedAt
+      ownerId
     }
   }
 `);
@@ -58,6 +59,17 @@ const CREATE_CONVERSATION = gql(`
             name
             createdAt
             updatedAt
+            ownerId
+        }
+    }
+`);
+
+
+const DELETE_CONVERSATION = gql(`
+    mutation DeleteConversation($id: Float!) {
+        deleteConversation(id: $id) {
+            id
+            name
         }
     }
 `);
@@ -108,6 +120,23 @@ const Home = () => {
         },
         onError: (error) => {
             console.error("Error creating conversation:", error);
+        }
+    });
+
+    const [deleteConversation] = useMutation(DELETE_CONVERSATION, {
+        onCompleted: (data) => {
+            console.log(`Conversation ${data.deleteConversation.name} deleted successfully`);
+            refetchConversations().then(() => {
+                if(conversationsData && conversationsData.findConversations.length > 0)
+                {
+                    setCurrentConversation(conversationsData.findConversations[0]);
+                } else {
+                    setCurrentConversation(null);
+                }
+            });
+        },
+        onError: (error) => {
+            console.error("Error deleting conversation:", error);
         }
     });
 
@@ -290,19 +319,29 @@ const Home = () => {
                                 </div>
                             </div>
                             <div>
-                                <Button
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(window.location.href).then(() => console.log("Copied to clipboard"));
-                                    }}
-                                >
-                                    <img src={binIcon} alt="delete"
-                                         style={
-                                             {
-                                                 width: '20px',
-                                                 height: '20px'
-                                             }
-                                         }/>
-                                </Button>
+                                {currentConversation.ownerId === currentUser.id &&
+                                    <Button
+                                        onClick={() => {
+                                            deleteConversation({
+                                                variables: {
+                                                    id: Number(currentConversation.id)
+                                                }
+                                            }).then(() => {
+                                                console.log("Conversation deleted successfully");
+                                            }).catch((error) => {
+                                                console.error("Error deleting conversation:", error);
+                                            });
+                                        }}
+                                    >
+                                        <img src={binIcon} alt="delete"
+                                             style={
+                                                 {
+                                                     width: '20px',
+                                                     height: '20px'
+                                                 }
+                                             }/>
+                                    </Button>
+                                }
                                 <Button
                                     onClick={() => {
                                         navigator.clipboard.writeText(window.location.href).then(() => console.log("Copied to clipboard"));

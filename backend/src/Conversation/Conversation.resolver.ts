@@ -48,7 +48,7 @@ export class ConversationResolver {
     @UseGuards(JwtAuthGuard)
     async deleteConversation(
         @Args('id') id: number,
-    ): Promise<void> {
-        await this.conversationService.deleteConversation(id);
+    ): Promise<Conversation> {
+        return await this.conversationService.deleteConversation(id);
     }
 }

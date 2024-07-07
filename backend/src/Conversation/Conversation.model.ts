@@ -15,6 +15,9 @@ export class Conversation {
   @Field()
   updatedAt: Date;
 
+  @Field()
+  ownerId: number;
+
 }
 
 @InputType({ description: 'Input type for creating a new conversation' })
