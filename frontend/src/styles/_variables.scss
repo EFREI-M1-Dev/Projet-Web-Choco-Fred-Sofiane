@@ -1,0 +1,30 @@
+// Sass variables
+
+$white: #FFFFFF;
+$dark: #2F3542;
+$text-muted: #57606F;
+$gray: #747D8C;
+$border: #DFE4EA;
+$light: #F1F2F6;
+
+$orange: #FF7F50;
+
+$border-radius: 0.3125rem;
+$small-font-size: 0.875rem;
+
+$spacers: (
+    0: 0,
+    1: 0.25rem,
+    2: 0.5rem,
+    3: 1rem,
+    4: 1.5rem,
+    5: 3rem
+);
+
+$breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px
+);

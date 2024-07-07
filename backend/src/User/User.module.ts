@@ -1,4 +1,3 @@
-import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { UserService } from './User.service';
 import { UserResolver } from './User.resolver';

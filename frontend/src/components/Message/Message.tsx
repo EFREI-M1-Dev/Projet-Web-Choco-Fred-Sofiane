@@ -9,13 +9,20 @@ export const Message = (
         myMessage: boolean
     }
 ) => (
-    <div className={styles.container}>
-        <div className={styles.head + " " + (props.myMessage ? styles.my : '')}>
-            <p className={styles.username}>{props.username}</p>
-            <p className={styles.heure}>{formatTimestamp(props.createdAt.getTime())}</p>
+    <div  className={styles.messageWrapper + ' '+ (props.myMessage ? styles.my : '')}>
+        <div className={styles.message}>
+            <div className={styles.name}>
+                {props.username}
+            </div>
+            <div>
+                <p>{props.content}</p>
+                <div className={styles.time}>
+                    {formatTimestamp(props.createdAt.getTime())}
+                </div>
+            </div>
         </div>
-        <p className={styles.content}>
-            {props.content}
-        </p>
     </div>
+
+
+
 )

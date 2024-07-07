@@ -1,3 +1,4 @@
+name: messagerie-choco-fred-sofiane
 services:
   redis:
     image: redis:latest

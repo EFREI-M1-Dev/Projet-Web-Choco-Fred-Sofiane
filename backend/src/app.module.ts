@@ -1,15 +1,23 @@
-import {AppRoutingModule} from './app.routing-module';
 import {Module} from '@nestjs/common';
 import {BullModule} from '@nestjs/bullmq';
 import {ConfigModule, ConfigService} from '@nestjs/config'
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
+import {GraphQLModule} from '@nestjs/graphql';
+import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo';
+import {join} from 'path';
 import {HealthCheckResolver} from "./HealthCheck/HealthCheck.resolver";
+import {AuthModule} from "./Auth/Auth.module";
+import {HealthCheckModule} from "./HealthCheck/HealthCheck.module";
+import {MessageModule} from "./Message/Message.module";
+import {UserModule} from "./User/User.module";
+import {ConversationModule} from "./Conversation/Conversation.module";
 
 @Module({
     imports: [
-        AppRoutingModule,
+        HealthCheckModule,
+        MessageModule,
+        AuthModule,
+        UserModule,
+        ConversationModule,
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
             autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -28,7 +36,7 @@ import {HealthCheckResolver} from "./HealthCheck/HealthCheck.resolver";
         }),
         ConfigModule.forRoot({
             isGlobal: true,
-        })
+        }),
     ],
 })
 export class AppModule {

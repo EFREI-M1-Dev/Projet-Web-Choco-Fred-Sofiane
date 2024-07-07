@@ -8,6 +8,7 @@
     "nest": "nest",
     "start": "cd backend && npm run start",
     "start:docker": "docker-compose --env-file ./.env -f ./docker/docker-compose.yml up -d"
+
   },
   "keywords": [],
   "author": "@Fredray-21",

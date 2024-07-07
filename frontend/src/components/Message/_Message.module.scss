@@ -1,27 +1,52 @@
+@import "/src/styles/variables";
 
-.container
-{
-  display        : flex;
-  flex-direction : column;
-  gap            : 1rem;
-  width          : fit-content;
+.messageWrapper {
+  display: flex;
 
-  p {
-    margin : 0;
-  }
+  &.my {
+    align-self: end;
 
-  .head
-  {
-    display        : flex;
-    flex-direction : row;
-    gap            : 1rem;
-
-    &.my
-    {
-      flex-direction : row-reverse;
+    .name {
+      display: none;
     }
   }
 
-  //justify-content: center;
-  //align-items: center;
+  .message {
+    display: flex;
+    padding: 0.75rem;
+    flex-direction: column;
+    gap: 0.125rem;
+
+    border-radius: $border-radius;
+    background-color: $white;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+
+    .name {
+      color: #FF7F50;
+      font-weight: 700;
+      font-size: $small-font-size;
+      text-transform: capitalize;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .time {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: 0.625rem;
+      font-size: .75rem;
+    }
+  }
+
+  &.sender {
+    justify-content: flex-end;
+
+    .message {
+      background-color: $gray;
+      color: $white;
+    }
+  }
 }

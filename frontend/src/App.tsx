@@ -1,7 +1,16 @@
-import Home from "./pages/home/Home";
+import {Navigate, Outlet, useLocation} from 'react-router-dom';
+import {useAuth} from "./provider/AuthProvider";
 
 const App = () => {
-    return <Home />
-}
+    const {pathname} = useLocation();
+    const { loggedIn } = useAuth();
 
-export default App
+    if(loggedIn && !pathname.startsWith('/home')) {
+        const query = new URLSearchParams(window.location.search);
+        return <Navigate to={`/home?${query}`} />;
+    }
+
+    return <Outlet />;
+};
+
+export default App;

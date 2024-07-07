@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {CreateUserInput, User} from './User.model';
 import {PrismaService} from "../prisma.service";
 import {Conversation, Prisma} from "@prisma/client";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -9,33 +10,44 @@ export class UserService {
     }
 
     async findOneById(id: number): Promise<User> | null {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id: id,
-            },
-        });
 
-        if (!user) {
+        if (!id) throw new Error('User ID is required');
+
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: id,
+                },
+            });
+
+            if (!user) {
+                console.error(`findOneById: User not found for id ${id}`);
+                return null;
+            }
+
+            return {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                password: user.password,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            };
+        } catch (error) {
+            console.error('findOneById: Error fetching user', error);
             return null;
         }
-
-        return {
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            password: user.password,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt
-        };
     }
 
     async createUser(data: CreateUserInput): Promise<User> {
         try {
+            const hashedPassword = await bcrypt.hash(data.password, 10);
+
             const user = await this.prisma.user.create({
                 data: {
                     email: data.email,
                     username: data.username,
-                    password: data.password,
+                    password: hashedPassword,
                 },
             });
 
@@ -49,7 +61,7 @@ export class UserService {
                 username: user.username,
                 password: user.password,
                 createdAt: user.createdAt,
-                updatedAt: user.updatedAt
+                updatedAt: user.updatedAt,
             };
 
         } catch (error) {
@@ -97,66 +109,54 @@ export class UserService {
             return [];
         }
 
-        return user.conversations.map((conversation) => {
-            return {
-                id: conversation.id,
-                name: conversation.name,
-                createdAt: conversation.createdAt,
-                updatedAt: conversation.updatedAt
-            };
-        });
+        return user.conversations;
     }
 
-    async joinConversation(userId: number, conversationId: number): Promise<User> {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                id: userId,
-            },
-            include: {
-                conversations: true,
-            },
-        });
+    async joinConversation(userId: number, conversationId: number): Promise<Conversation> {
 
-        if (!user) {
-            throw new Error('User not found');
-        }
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userId,
+                },
+                include: {
+                    conversations: true,
+                },
+            });
 
-        const conversation = await this.prisma.conversation.findUnique({
-            where: {
-                id: conversationId,
-            },
-        });
+            if (!user) {
+                throw new Error('User not found');
+            }
 
-        if (!conversation) {
-            throw new Error('Conversation not found');
-        }
+            const conversation = await this.prisma.conversation.findUnique({
+                where: {
+                    id: conversationId,
+                },
+            });
 
-        const updatedUser = await this.prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                conversations: {
-                    connect: {
-                        id: conversationId,
+            if (!conversation) {
+                throw new Error('Conversation not found');
+            }
+
+            await this.prisma.user.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    conversations: {
+                        connect: {
+                            id: conversationId,
+                        },
                     },
                 },
-            },
-            include: {conversations: true},
-        });
+                include: {conversations: true},
+            });
 
-        if (!updatedUser) {
-            throw new Error('User not updated');
-        }
-
-        return {
-            id: updatedUser.id,
-            email: updatedUser.email,
-            username: updatedUser.username,
-            password: updatedUser.password,
-            createdAt: updatedUser.createdAt,
-            updatedAt: updatedUser.updatedAt,
-            conversations: updatedUser.conversations
+            return conversation;
+        } catch (error) {
+            console.error('joinConversation: Error joining conversation', error);
+            throw new Error('Error joining conversation');
         }
     };
+
 }
