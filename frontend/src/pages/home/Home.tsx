@@ -475,6 +475,7 @@ const Home = () => {
                 <TextField
                     type={"text"}
                     value={inputDiscussionName}
+                    placeholder={"Entrez le nom de la discussion"}
                     onChange={(e) => setInputDiscussionName(e.target.value)}/>
             </Modal>
 

@@ -33,7 +33,8 @@
 ////</div>
 ////</div>
 ////</div>
-
+@use "sass:map";
+@import "../../styles/variables";
 
 .modal {
     display: none;
@@ -49,27 +50,39 @@
 }
 
 .modalContent {
-    background-color: #fefefe;
+    background-image : url('../../assets/pattern-light-white.png');
     margin: 15% auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    border: 20px solid white;
+    width: 40%;
+
 }
 
 .modalHeader {
     padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
+    color: black;
 }
 
 .modalBody {
     padding: 2px 16px;
+
+    input {
+        flex-grow: 1;
+        height: 3.5rem;
+        border-radius: 1.75rem;
+        background-color: #FFFFFF;
+        border: 0.0625rem solid #DFE4EA;
+        outline: none;
+        padding: 0 1rem;
+    }
 }
 
 .modalFooter {
     padding: 2px 16px;
-    background-color: #5cb85c;
     color: white;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
 }
 
 .close {
@@ -77,12 +90,55 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
+    background-color: #0056b3;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .close:hover,
 .close:focus {
-    color: #000;
+    background-color: white;
+    color: #0056b3;
     text-decoration: none;
     cursor: pointer;
 }
 
+
+.buttonPrimary {
+    background-color : #007bff;
+    color            : #fff;
+    border           : none;
+    padding          : 10px 20px;
+    border-radius    : 5px;
+    cursor           : pointer;
+    transition       : background-color 0.3s;
+    font-size        : 20px;
+
+    &:hover
+    {
+        background-color : #0056b3;
+    }
+}
+
+.buttonSecondary {
+    background-color : $white;
+    color            : #007bff;
+    border           : none;
+    padding          : 10px 20px;
+    border-radius    : 5px;
+    cursor           : pointer;
+    transition       : background-color 0.3s;
+    font-size        : 20px;
+
+    &:hover
+    {
+        background-color : #0056b3;
+        color: $white;
+    }
+}
