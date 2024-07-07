@@ -3,7 +3,7 @@ import {AppModule} from './app.module';
 import consola from "consola";
 import cors = require("cors");
 
-export const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1', 'http://localhost:4173'];
+export const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1', 'http://localhost:4173', 'https://projet-web-choco-fred-sofiane-frontend.onrender.com/'];
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
