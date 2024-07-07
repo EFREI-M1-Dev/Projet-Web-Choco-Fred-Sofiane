@@ -72,7 +72,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
             await client.resetStore();
         } catch (error) {
             console.error('Error refreshing token:', error);
-            await logout(); // Assurez-vous que logout() est correctement implémenté pour gérer la déconnexion
+            await logout();
         }
     };
 
@@ -114,7 +114,9 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 setUser(profileData.profile);
             }
             const intervalId = setInterval(() => {
-                refreshAccessToken(refreshToken).catch(logout);
+                refreshAccessToken(refreshToken)
+                    .then(() => console.log('Token refreshed'))
+                    .catch(logout);
             }, 14 * 60 * 1000); // Refresh token every 14 minutes
 
             return () => clearInterval(intervalId);

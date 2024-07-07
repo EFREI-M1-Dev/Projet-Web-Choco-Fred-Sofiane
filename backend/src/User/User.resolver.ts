@@ -12,6 +12,7 @@ export class UserResolver {
     }
 
     @Query(returns => User)
+    @UseGuards(JwtAuthGuard)
     async findOneById(@Args('id') id: number): Promise<User> {
         const user = await this.userService.findOneById(id);
         if (!user) {
@@ -21,6 +22,7 @@ export class UserResolver {
     }
 
     @Query(returns => [Conversation])
+    @UseGuards(JwtAuthGuard)
     async findConversations(@Args('id') id: number): Promise<Conversation[]> {
         return this.userService.getConversationByUserId(id);
     }
@@ -31,11 +33,13 @@ export class UserResolver {
     }
 
     @Mutation(returns => User)
+    @UseGuards(JwtAuthGuard)
     async deleteUser(@Args('id') id: number): Promise<User> {
         return this.userService.deleteUser(id);
     }
 
     @Mutation(returns => User)
+    @UseGuards(JwtAuthGuard)
     async joinConversation(@Args('userId') userId: number, @Args('conversationId') conversationId: number): Promise<User> {
         return this.userService.joinConversation(userId, conversationId);
     }

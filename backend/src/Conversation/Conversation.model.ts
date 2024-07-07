@@ -1,4 +1,5 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import {Field, ID, InputType, ObjectType} from '@nestjs/graphql';
+import { User} from "../User/User.model";
 
 @ObjectType({ description: 'Conversation' })
 export class Conversation {
@@ -14,4 +15,13 @@ export class Conversation {
   @Field()
   updatedAt: Date;
 
+}
+
+@InputType({ description: 'Input type for creating a new conversation' })
+export class AddConversationInput {
+  @Field()
+  name: string;
+
+  @Field((type) => User)
+  user: User;
 }

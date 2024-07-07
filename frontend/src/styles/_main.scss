@@ -33,3 +33,9 @@ h4
   line-height : normal;
   margin      : 0;
 }
+
+// Scrollbar
+::-webkit-scrollbar {
+  display: none;
+}
+

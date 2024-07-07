@@ -1,11 +1,14 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { PrismaService } from '../prisma.service';
-import {Conversation} from "../Conversation/Conversation.model";
+import { SocketGateway } from '../Socket/socket.gateway'; // Assurez-vous que le chemin est correct
 
 @Processor('message-queue')
 export class MessageProcessor extends WorkerHost {
-    constructor(private readonly prisma: PrismaService) {
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly socketGateway: SocketGateway, // Injectez le SocketGateway
+    ) {
         super();
     }
 
@@ -25,6 +28,7 @@ export class MessageProcessor extends WorkerHost {
                 },
             });
             console.log(`Message saved with id: ${job.id}`);
+            this.socketGateway.sendMessage(conversationId); // Envoyez l'événement au front-end
         } catch (error) {
             console.error(`Failed to save message with id: ${job.id}`, error);
         }

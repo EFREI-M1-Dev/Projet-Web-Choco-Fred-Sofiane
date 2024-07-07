@@ -2,6 +2,8 @@ import {Injectable} from '@nestjs/common';
 import {Conversation} from './Conversation.model';
 import {PrismaService} from '../prisma.service';
 import {MessageWithUser} from "../Message/Message.model";
+import {User} from "../User/User.model";
+import {Context} from "@nestjs/graphql";
 
 
 @Injectable()
@@ -9,10 +11,10 @@ export class ConversationService {
     constructor(private prisma: PrismaService) {
     }
 
-    async addConversation(name: string): Promise<Conversation> {
+    async addConversation(name: string, user: User): Promise<Conversation> {
         const conversation = await this.prisma.conversation.create({
             data: {
-                name: name,
+                name: name
             },
         });
 
@@ -20,12 +22,18 @@ export class ConversationService {
             throw new Error('Failed to create conversation');
         }
 
-        return {
-            id: conversation.id,
-            name: conversation.name,
-            createdAt: conversation.createdAt,
-            updatedAt: conversation.updatedAt,
-        };
+        await this.prisma.user.update({
+            where: {id: user.id},
+            data: {
+                conversations: {
+                    connect: {
+                        id: conversation.id,
+                    },
+                },
+            },
+        });
+
+        return conversation;
     }
 
     async updateConversation(id: number, name: string): Promise<Conversation> {
@@ -40,12 +48,7 @@ export class ConversationService {
             throw new Error('Failed to update conversation');
         }
 
-        return {
-            id: conversation.id,
-            name: conversation.name,
-            createdAt: conversation.createdAt,
-            updatedAt: conversation.updatedAt,
-        };
+        return conversation;
     }
 
     async deleteConversation(id: number): Promise<void> {
@@ -65,12 +68,7 @@ export class ConversationService {
             return null;
         }
 
-        return {
-            id: conversation.id,
-            name: conversation.name,
-            createdAt: conversation.createdAt,
-            updatedAt: conversation.updatedAt,
-        };
+        return conversation;
     }
 
     async findMessagesByConversationId(id: number): Promise<MessageWithUser[]> {
@@ -96,4 +94,5 @@ export class ConversationService {
             deletedAt: message.deletedAt,
         }));
     }
+
 }

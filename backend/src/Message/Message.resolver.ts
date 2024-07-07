@@ -1,13 +1,15 @@
 import {AddMessageJobInput, Message} from './Message.model';
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql';
 import { MessageService } from './Message.service';
-import { NotFoundException } from '@nestjs/common';
+import {NotFoundException, UseGuards} from '@nestjs/common';
+import {JwtAuthGuard} from "../Auth/Jwt-auth.guard";
 
 @Resolver(() => Message)
 export class MessageResolver {
   constructor(private readonly messageService: MessageService) {}
 
   @Query(() => Message)
+  @UseGuards(JwtAuthGuard)
   async message(@Args('id') id: number): Promise<Message> {
     const message = await this.messageService.findOneById(id);
     if (!message) {
@@ -17,11 +19,13 @@ export class MessageResolver {
   }
 
   @Mutation(() => String)
+  @UseGuards(JwtAuthGuard)
   async addMessageJob( @Args('data') data: AddMessageJobInput): Promise<string> {
     return await this.messageService.addMessageJob(data);
   }
 
   @Mutation(() => Message)
+  @UseGuards(JwtAuthGuard)
   async editMessageContent(
     @Args('id') id: number,
     @Args('content') content: string,
@@ -30,6 +34,7 @@ export class MessageResolver {
   }
 
   @Mutation(() => Message)
+  @UseGuards(JwtAuthGuard)
   async deleteMessage(@Args('id') id: number): Promise<Message> {
     return this.messageService.deleteMessage(id);
   }
