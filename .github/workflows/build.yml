@@ -43,8 +43,7 @@ jobs:
       - name: Push Docker image to GitHub Container Registry (frontend)
         run: docker push ghcr.io/${{ steps.convert_repository.outputs.owner }}/${{ steps.convert_repository.outputs.repo }}:frontend-latest
 
-
-      #Pour le déploiement sur le VPS
+      # Pour le déploiement sur le VPS
       - name: Create .env file
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
@@ -68,18 +67,11 @@ jobs:
             cd /home/${{ secrets.VPS_USERNAME }}/app/projetFinal/docker
             docker-compose --env-file ../.env -f docker-compose.yml up -d
 
-
-        #Pour le déploiement sur Render
+      # Pour le déploiement sur Render
       - name: Deploy backend to Render
-        uses: render-deploy-action@1.0.0
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_BACKEND }}
         run: |
-          curl "$deploy_url"
+          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_BACKEND }}"
 
       - name: Deploy frontend to Render
-        uses: render-deploy-action@1.0.0
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_FRONTEND }}
         run: |
-          curl "$deploy_url"
+          curl "${{ secrets.RENDER_DEPLOY_HOOK_URL_FRONTEND }}"
