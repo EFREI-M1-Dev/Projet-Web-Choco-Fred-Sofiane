@@ -41,8 +41,8 @@ const Modal = (
                     )}
                     {props.actionButton.buttons === "YES_CANCEL" && (
                         <>
-                            <button onClick={() => props.actionButton.onAction(ModalAction.YES)}>Yes</button>
-                            <button onClick={() => props.actionButton.onAction(ModalAction.CANCEL)}>Cancel</button>
+                            <button className={styles.buttonPrimary} onClick={() => props.actionButton.onAction(ModalAction.YES)}>Yes</button>
+                            <button className={styles.buttonSecondary} onClick={() => props.actionButton.onAction(ModalAction.CANCEL)}>Cancel</button>
                         </>
                     )}
                     {props.actionButton.buttons === "OK" && (
