@@ -1,5 +1,4 @@
 import { ObjectType, Field, Int, InputType } from '@nestjs/graphql';
-import { User } from '../user/user.model';
 
 @ObjectType()
 export class PickedUser {
