@@ -1,0 +1,42 @@
+@import "../../styles/variables";
+
+.header
+{
+  display          : flex;
+  padding          : 1rem;
+  background-color : $white;
+
+
+  .conversationComponent
+  {
+    padding         : 0;
+    display         : flex;
+    justify-content : space-between;
+    width           : 100%;
+
+    .currentConvContainer
+    {
+      display : flex;
+      gap     : 1rem;
+
+      .profilePic
+      {
+        display         : flex;
+        width           : 3.5rem;
+        height          : 3.5rem;
+        flex-direction  : column;
+        justify-content : center;
+        align-items     : center;
+        border-radius   : 50%;
+        flex-shrink     : 0;
+        color           : $white;
+      }
+    }
+
+    .currentConvContainerActions
+    {
+      display : flex;
+      gap     : 1rem;
+    }
+  }
+}

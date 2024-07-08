@@ -34,14 +34,14 @@ export const MainControllerProvider: React.FC<{ children: ReactNode }> = ({child
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App />,
-        errorElement: <ErrorPage />,
+        element: <App/>,
+        errorElement: <ErrorPage/>,
         children: [
-            { index: true, element: <AuthentificationPage /> },
+            {index: true, element: <AuthentificationPage/>},
             {
                 path: '/home',
                 children: [
-                    { index: true, element: <HomePage /> },
+                    {index: true, element: <HomePage/>},
                 ],
             },
         ],
@@ -51,12 +51,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <MainControllerProvider>
-            <ApolloProvider client={client}>
-                <AuthProvider>
+        <ApolloProvider client={client}>
+            <AuthProvider>
+                <MainControllerProvider>
                     <RouterProvider router={router}/>
-                </AuthProvider>
-            </ApolloProvider>
-        </MainControllerProvider>
+                </MainControllerProvider>
+            </AuthProvider>
+        </ApolloProvider>
     </React.StrictMode>
 );

@@ -1,0 +1,40 @@
+@import "../../styles/variables";
+
+.footer
+{
+  display : flex;
+  padding : 1rem;
+  gap     : 1rem;
+
+  input
+  {
+    flex-grow        : 1;
+    height           : 3.5rem;
+    border-radius    : 1.75rem;
+    background-color : $white;
+    border           : .0625rem solid $border;
+    outline          : none;
+    padding          : 0 1rem;
+
+    &:focus
+    {
+      border-color : $dark;
+    }
+  }
+
+  button
+  {
+    box-sizing       : border-box;
+    background-color : $dark;
+    height           : 3.5rem;
+    aspect-ratio     : 1;
+    padding          : 0;
+    border-radius    : 50%;
+
+    img
+    {
+      width  : 1.5rem;
+      height : 1.5rem;
+    }
+  }
+}
