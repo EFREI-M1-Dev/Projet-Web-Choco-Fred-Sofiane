@@ -16,6 +16,7 @@ import Modal, {ModalAction} from "../../components/Modal/Modal";
 import {TextField} from "../../components/TextField/TextField";
 import {appropriateTextColor, getBackgroundColor} from "../../utils/getCustomColor";
 import io from 'socket.io-client';
+import {useMainControllerContext} from "../../main";
 
 const FIND_CONVERSATIONS = gql(`
   query FindConversations($id: Float!) {
@@ -98,7 +99,8 @@ const JOIN_CONVERSATION = gql(`
 `);
 
 const Home = () => {
-    const {loggedIn, loadingUser, currentUser} = useAuth();
+    const {m_notificationController} = useMainControllerContext();
+    const {loggedIn, loadingUser, currentUser, logout} = useAuth();
     const socketRef = useRef<any>(null);
 
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
@@ -145,6 +147,7 @@ const Home = () => {
         },
         onError: (error) => {
             console.error("Error sending message:", error);
+            m_notificationController.setNotification({message: "Error sending message", type: "error"});
         }
     });
 
@@ -155,23 +158,25 @@ const Home = () => {
             });
         },
         onError: (error) => {
-            console.error("Error creating conversation:", error);
+            m_notificationController.setNotification({message: "Error creating conversation", type: "error"});
         }
     });
 
     const [deleteConversation] = useMutation(DELETE_CONVERSATION, {
         onCompleted: (data) => {
-            console.log(`Conversation ${data.deleteConversation.name} deleted successfully`);
-            refetchConversations().then(() => {
-                if (conversationsData && conversationsData.findConversations.length > 0) {
-                    setCurrentConversation(conversationsData.findConversations[0]);
+            m_notificationController.setNotification({message: "Conversation deleted successfully", type: "success"});
+            refetchConversations().then((res) => {
+                console.log("Conversations:", data);
+                if (res.data && res.data.findConversations.length > 0) {
+                    console.log("Setting current conversation to:", res.data.findConversations[0]);
+                    setCurrentConversation(res.data.findConversations[0]);
                 } else {
                     setCurrentConversation(null);
                 }
             });
         },
         onError: (error) => {
-            console.error("Error deleting conversation:", error);
+            m_notificationController.setNotification({message: "Error deleting conversation", type: "error"});
         }
     });
 
@@ -184,24 +189,25 @@ const Home = () => {
         },
         onError: (error) => {
             console.error("Error joining conversation:", error);
+            m_notificationController.setNotification({message: "Error joining conversation", type: "error"});
         }
     });
 
     useEffect(() => {
         if (conversationId) {
-            console.log("Conversation ID:", conversationId,conversationData,loadingConversation, loadingConversations);
             if (conversationData && !loadingConversation && !loadingConversations) {
                 const conversation = conversationData.conversation;
                 const alreadyJoined = conversationsData && conversationsData.findConversations.find(conversation => conversation.id === conversationId);
-                console.log("Already joined:", alreadyJoined);
                 if (conversation && alreadyJoined === undefined) {
                     setConversationIdToJoin(Number(conversationId));
                     setModalJoinDiscussion_isOpen(true);
+                } else {
                     setCurrentConversation(conversation);
+                    m_notificationController.setNotification({message: "Vous avez déjà rejoint cette discussion", type: "info"});
                 }
             }
         }
-    }, [loadingConversation,loadingConversations]);
+    }, [loadingConversation, loadingConversations]);
 
 
     useEffect(() => {
@@ -265,6 +271,7 @@ const Home = () => {
     if (!loggedIn || !currentUser) {
         const query = new URLSearchParams(window.location.search);
         return <Navigate to={`/?${query}`}/>;
+
     }
 
     const handleSendMessage = async () => {
@@ -288,6 +295,7 @@ const Home = () => {
             });
         } catch (error) {
             console.error("Error sending message:", error);
+            m_notificationController.setNotification({message: "Error sending message", type: "error"});
         }
     };
     return (
@@ -295,7 +303,12 @@ const Home = () => {
             className={styles.containerHome}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                    handleSendMessage().then(() => console.log("Message sent")).catch((error) => console.error("Error sending message:", error));
+                    handleSendMessage().then(() => console.log("Message sent"))
+                        .catch((error) => {
+                                console.error("Error sending message:", error);
+                                m_notificationController.setNotification({message: "Error sending message", type: "error"});
+                            }
+                        );
                 }
             }
             }
@@ -308,6 +321,12 @@ const Home = () => {
                     <div className={styles.welcomeMessage}>
                         <h4>Bonjour {currentUser.username}</h4>
                         <p>Nous vous souhaitons une agréable journée.</p>
+                        <Button
+                            className={styles.logoutButton}
+                            onClick={() => {
+                                logout();
+                            }}
+                        > Déconnexion </Button>
                     </div>
                 </div>
                 <div className={styles.conversations}>

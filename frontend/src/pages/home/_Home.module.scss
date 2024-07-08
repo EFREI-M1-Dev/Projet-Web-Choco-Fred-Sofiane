@@ -34,10 +34,22 @@
 
       .welcomeMessage
       {
+        display: flex;
+        flex-direction: column;
+        gap: .5em;
         p
         {
           color  : $text-muted;
           margin : 0;
+        }
+        .logoutButton
+        {
+          background-color: $red;
+
+          &:hover
+          {
+            background-color: $ref-hov;
+          }
         }
       }
     }

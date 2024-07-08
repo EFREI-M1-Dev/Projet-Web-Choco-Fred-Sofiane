@@ -8,6 +8,7 @@ import {gql} from "../../types";
 import {useApolloClient, useMutation} from "@apollo/client";
 import {useNavigate} from "react-router";
 import Loader from "../../components/Loader/Loader";
+import {useMainControllerContext} from "../../main";
 
 const REGISTER_MUTATION = gql(`
         mutation Register($data: CreateUserInput!) {
@@ -21,6 +22,7 @@ const REGISTER_MUTATION = gql(`
     `);
 
 const AuthentificationPage = () => {
+    const {m_notificationController} = useMainControllerContext();
     const [isLogin, setIsLogin] = useState<boolean>(true);
 
     const [inputEmailValue, setInputEmailValue] = useState<string>('');
@@ -62,7 +64,7 @@ const AuthentificationPage = () => {
                     throw new Error('Les mots de passe ne correspondent pas');
                 }
 
-                const { data } = await registerMutation(
+                const {data} = await registerMutation(
                     {
                         variables: {
                             data: {email: inputEmailValue, password: inputPasswordValue, username: inputUsernameValue}
@@ -70,11 +72,14 @@ const AuthentificationPage = () => {
                     }
                 );
                 if (!data) throw new Error('No data');
+                toggleForm();
+                m_notificationController.setNotification({message: 'Compte créé avec succès, vous pouvez vous connecter', type: "success"});
                 await client.resetStore();
             }
         } catch (e) {
-            if (e instanceof Error)
-                alert(e.message);
+            if (e instanceof Error) {
+                m_notificationController.setNotification({message: e.message, type: "error"});
+            }
         }
     }
 
@@ -98,12 +103,23 @@ const AuthentificationPage = () => {
                             <div className={styles.logo}>
                                 <img src={logo} alt="logo"/>
                             </div>
-                            <form className={styles.form} data-form-type="login">
+                            <div
+                                className={styles.form}
+                                data-form-type="login"
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSubmit().catch(() => console.log('error'));
+                                    }
+                                }
+                                }
+                            >
                                 <h4>Connexion</h4>
-                                <div id="loginError" className={`${styles.alert} ${styles.alertDanger} ${styles.hidden}`}>
+                                <div id="loginError"
+                                     className={`${styles.alert} ${styles.alertDanger} ${styles.hidden}`}>
                                     Erreur lors de la connexion
                                 </div>
-                                <div id="registerSuccess" className={`${styles.alert} ${styles.alertSuccess} ${styles.hidden}`}>
+                                <div id="registerSuccess"
+                                     className={`${styles.alert} ${styles.alertSuccess} ${styles.hidden}`}>
                                     Compte créé avec succès, vous pouvez vous connecter
                                 </div>
 
@@ -129,7 +145,7 @@ const AuthentificationPage = () => {
                                 <Button className={styles.buttonPrimary} onClick={handleSubmit}>
                                     Se connecter
                                 </Button>
-                            </form>
+                            </div>
 
                             <div className={styles.form}>
                                 <span>Vous n'avez pas de compte ? <a id="showRegisterFormLink" href="#"
@@ -142,9 +158,17 @@ const AuthentificationPage = () => {
                             <div className={styles.logo}>
                                 <img src={logo} alt="logo"/>
                             </div>
-                            <form className={styles.form} data-form-type="register">
+                            <div className={styles.form} data-form-type="register"
+                                 onKeyDown={(e) => {
+                                     if (e.key === 'Enter') {
+                                         handleSubmit().catch(() => console.log('error'));
+                                     }
+                                 }
+                                 }
+                            >
                                 <h4>Créer un compte</h4>
-                                <div id="registerError" className={`${styles.alert} ${styles.alertDanger} ${styles.hidden}`}>
+                                <div id="registerError"
+                                     className={`${styles.alert} ${styles.alertDanger} ${styles.hidden}`}>
                                     Erreur lors de la création du compte
                                 </div>
 
@@ -161,7 +185,9 @@ const AuthentificationPage = () => {
                                     <div className={styles.marginBottom}>
                                         <label htmlFor="registerPasswordInput" className={styles.formLabel}>Mot de
                                             passe</label>
-                                        <input type="password" className={`${styles.formControl} ${styles.marginBottom}`} id="registerPasswordInput"
+                                        <input type="password"
+                                               className={`${styles.formControl} ${styles.marginBottom}`}
+                                               id="registerPasswordInput"
                                                placeholder="Mot de passe" required
                                                value={inputPasswordValue}
                                                onChange={(e) => setInputPasswordValue(e.target.value)}
@@ -187,7 +213,7 @@ const AuthentificationPage = () => {
                                 <Button className={styles.buttonPrimary} onClick={handleSubmit}>
                                     S'inscrire
                                 </Button>
-                            </form>
+                            </div>
 
                             <div className={styles.form}>
                                 <span>Vous possédez déjà un compte ?</span>

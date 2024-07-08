@@ -1,11 +1,11 @@
-import useAuthController from "./controllerAuth";
+import useNotificationController from "./controllerNotification";
 
 const useMainController = () => {
 
-    const m_authController = useAuthController();
+    const m_notificationController = useNotificationController();
 
     return {
-        m_authController,
+        m_notificationController
     };
 };
 
