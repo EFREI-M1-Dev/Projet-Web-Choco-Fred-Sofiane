@@ -29,7 +29,7 @@ import {ConversationModule} from "./Conversation/Conversation.module";
                 connection: {
                     host: configService.get<string>('REDIS_HOST'),
                     port: 6379,
-                    password: configService.get<string>('REDIS_PASSWORD'),
+                    // password: configService.get<string>('REDIS_PASSWORD'),
                 },
             }),
             inject: [ConfigService],
