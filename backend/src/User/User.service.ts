@@ -155,7 +155,7 @@ export class UserService {
             return conversation;
         } catch (error) {
             console.error('joinConversation: Error joining conversation', error);
-            throw new Error('Error joining conversation');
+            throw error;
         }
     };
 
